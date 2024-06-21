@@ -1,7 +1,59 @@
-﻿
+﻿@model IEnumerable<EmployeeManagement.Models.Employeeinfo>
 @{
     ViewBag.Title = "EmployeeDashboard";
+    string employeeName = ViewBag.EmployeeName;
 }
 
-<h4>EmployeeDashboard</h4>
+<h2>EmployeeDashboard</h2>
+<h2>Welcome  @employeeName to Employee Dashboard!</h2>
 
+<table class="table">
+    <tr>
+
+        <th>
+
+            employeename
+        </th>
+      
+     
+        <th>
+            Designation
+
+        </th>
+        <th>
+            Department
+
+        </th>
+         
+    </tr>
+
+
+    @if (Model != null && Model.Count() > 0)
+    {
+
+        foreach (var item in Model)
+        {
+<tr>
+    <th>
+        @Html.DisplayFor(modelItem => item.EmployeeName)
+
+    </th>
+    <th>
+
+        @Html.DisplayFor(modelItem => item.Designation)
+
+    </th>
+    <th>
+        @Html.DisplayFor(modelItem => item.Department)
+    </th>
+
+
+
+
+</tr>
+
+        }
+    }
+
+
+</table>

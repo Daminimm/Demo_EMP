@@ -1,0 +1,19 @@
+﻿@model IEnumerable<EmployeeManagement.Models.Employeeinfo>
+@{
+    ViewBag.Title = "AttendanceReport";
+}
+
+<h2>AttendanceReport</h2>
+@using (Html.BeginForm("AttendanceReport", "AdminController", FormMethod.Post)) // 
+{
+    @Html.Label("EmployeeName", "Select Employee:")
+    @*@Html.DropDownList("EmployeeName", (List<SelectListItem>)ViewBag.employeeList, "Select Employee ")*@
+
+    @*@Html.LabelFor(Model => Model.EmployeeName)*@
+    @Html.DropDownList("EmployeeName", ViewBag.employeeList as List<SelectListItem>, "Select Employee", new { @class = "form-control" })
+
+
+    <button type="submit" class="btn btn-primary">Generate Report</button>
+
+
+ }

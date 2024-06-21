@@ -1,17 +1,27 @@
-﻿@model EmployeeManagement.Models.Employeeinfo
+﻿@model IEnumerable<EmployeeManagement.Models.Employeeinfo>
+
 @{
     ViewBag.Title = "AdminDashboard";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <p>Welcome to the Admin Dashboard!</p>
-<div>
-    <h1>Employee Management</h1>
-    <p><a href="@Url.Action("AddEmployee", "Admin")">Add Employee</a></p>
-
-</div>
-<table class="table">
-  
 
 
-  
+    <h4>Employee Management</h4>
+    @*<p><a href="@Url.Action("AddEmployee", "Admin")">Add Employee</a></p>*@
+    <nav>
+        <ul>
+            <li><a href="@Url.Action("EmployeeManagement", "Admin")">Employee Management</a></li>
+            <li><a href="@Url.Action("AttendanceManagement", "Admin")">Attendance Management</a></li>
+        </ul>
+    </nav>
+
+
+
+
+
+
+
+
+

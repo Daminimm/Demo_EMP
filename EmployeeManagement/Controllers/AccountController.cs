@@ -11,7 +11,7 @@ namespace EmployeeManagement.Controllers
 {
     public class AccountController : Controller
     {
-        private Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
+      
         // GET: Account
         public ActionResult Login()
         {
@@ -21,15 +21,17 @@ namespace EmployeeManagement.Controllers
         // POST: Account/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginViewModel model)
+        public ActionResult Login(Userlogin MODEL)
         {
+            Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
             if (ModelState.IsValid)
             {
-                var user = DbContext.Userlogins.FirstOrDefault(u => u.Username == model.Username && u.Password == model.Password);
+                var user = DbContext.Userlogins.FirstOrDefault(u => u.Username == MODEL.Username && u.Password == MODEL.Password);
 
                 if (user != null)
                 {
-              
+                    Session["UserId"] = user.UserId;  
+
                     if (user.Role == "Admin")
                     {
                         return RedirectToAction("AdminDashboard", "Admin");
@@ -43,7 +45,7 @@ namespace EmployeeManagement.Controllers
                 ModelState.AddModelError("", "Invalid username or password.");
             }
 
-            return View(model);
+            return View(MODEL);
         }
     }
 }
