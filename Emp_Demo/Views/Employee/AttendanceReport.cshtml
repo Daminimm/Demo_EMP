@@ -1,0 +1,72 @@
+﻿@model Emp_Demo.Models.AttendanceViewModel
+@{
+    ViewBag.Title = "AttendanceReport";
+}
+
+
+<h2>AttendanceReport</h2>
+
+
+
+
+
+@if (Model.Attendances != null && Model.Attendances.Any())
+{
+    <h3>Attendance History:</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var attendance in Model.Attendances)
+            {
+                <tr>
+                    <td>@attendance.AttendanceDate.ToShortDateString()</td>
+                    <td>@attendance.Timestamp.ToShortTimeString()</td>
+                    <td>@attendance.EntryType</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No attendance records found.</p>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+@*<h2>Attendance Report</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Attendance ID</th>
+                <th>Employee ID</th>
+                <th>Attendance Date</th>
+                <th>Timestamp</th>
+                <th>Entry Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.AttendanceId</td>
+                    <td>@item.EmployeeId</td>
+                    <td>@item.AttendanceDate.ToShortDateString()</td>
+                    <td>@item.Timestamp.ToShortTimeString()</td>
+                    <td>@item.EntryType</td>
+                </tr>
+            }
+        </tbody>
+    </table>*@
+
+
+

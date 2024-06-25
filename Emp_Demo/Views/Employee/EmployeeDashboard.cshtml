@@ -1,0 +1,86 @@
+﻿@model Emp_Demo.Models.AttendanceViewModel
+@{
+    ViewBag.Title = "EmployeeDashboard";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string employeeName = ViewBag.EmployeeName;
+}
+
+
+
+<h2>EmployeeDashboard</h2>
+<h2>Welcome to   @employeeName  Employee Dashboard!</h2>
+
+
+<div>
+    @using (Html.BeginForm("PunchIn", "Employee", FormMethod.Post, new { @class = "form-inline", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @*<label>
+                <input type="radio" name="entryType" value="PunchIn" checked /> Punch In
+            </label>
+            <button type="submit" class="btn btn-primary">Submit Punch In</button>*@
+        @Html.HiddenFor(m => m.EmployeeId)
+
+        <label class="radio-inline">
+            @Html.RadioButtonFor(m => m.EntryType, "PunchIn", new { id = "punchInRadio" })
+            Punch In
+        </label>
+
+    }
+
+    @using (Html.BeginForm("PunchOut", "Employee", FormMethod.Post, new { @class = "form-inline", role = "form" }))
+     {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.EmployeeId)
+        <label class="radio-inline">
+            @Html.RadioButtonFor(m => m.EntryType, "PunchOut", new { id = "punchOutRadio" })
+            Punch Out
+        </label>
+
+
+        @*<label>
+                <input type="radio" name="entryType" value="PunchOut" /> Punch Out
+            </label>
+            <button type="submit" class="btn btn-primary">Submit Punch Out</button>*@
+     }
+    <button type="submit" class="btn btn-primary">Submit</button>
+</div>
+
+
+
+
+
+
+
+
+
+
+@*<div>
+        <label>Select action:</label><br />
+        <input type="radio" name="actionType" value="PunchIn" id="punchInRadio" /> <label for="punchInRadio">Punch In</label><br />
+        <input type="radio" name="actionType" value="PunchOut" id="punchOutRadio" /> <label for="punchOutRadio">Punch Out</label>
+    </div>
+
+    <div>
+        <button type="button" id="submitButton">Submit</button>
+    </div>
+
+    @section scripts {
+        <script>
+            $(document).ready(function () {
+                $('#submitButton').click(function () {
+                    var selectedAction = $('input[name="actionType"]:checked').val();
+                    if (selectedAction) {
+                        window.location.href = '/Employee/' + selectedAction;
+                    }
+                });
+            });
+        </script>
+    }*@
+
+
+@Html.ActionLink("Attendance Report", "AttendanceReport", "Employee", null, new { @class = "btn btn-secondary" })
+
+

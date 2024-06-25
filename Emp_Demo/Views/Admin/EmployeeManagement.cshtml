@@ -1,0 +1,107 @@
+﻿@model IEnumerable<Emp_Demo.Models.Employeeinfo>
+@{
+    ViewBag.Title = "EmployeeManagement";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+<h2>EmployeeManagement</h2>
+<a href="@Url.Action("AddEmployee", "Admin")">Add Employee</a>
+<table class="table">
+    <tr>
+
+        <th>
+
+            employeename
+        </th>
+        <th>
+
+            email
+        </th>
+        <th>
+
+            contact
+        </th>
+        <th>
+
+            Address
+        </th>
+        <th>
+            Designation
+
+        </th>
+        <th>
+            Department
+
+        </th>
+        <th>
+
+            Username
+        </th>
+        <th>
+
+            password
+        </th>
+
+
+
+        <th>Action</th>
+    </tr>
+
+
+    @if (Model != null && Model.Count() > 0)
+    {
+
+        foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmployeeName)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+
+                    @Html.DisplayFor(modelItem => item.Contact)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Designation)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Department)
+                </td>
+                <td>
+
+                    @Html.DisplayFor(modelItem => item.Userlogin.Username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Userlogin.Password)
+                </td>
+
+                <td>
+                    @Html.ActionLink(" ", "Edit", new { ID = item.EmployeeId }, new { @class = "bi bi-pen-fill", style = "text-decoration: none;" })
+
+                    |
+
+                    @Html.ActionLink(" ", "Delete", new { ID = item.EmployeeId }, new { @class = "bi bi-trash-fill delete-link", id = "deleteLink" })
+
+                </td>
+
+
+            </tr>
+
+        }
+    }
+
+
+</table>
+
+
+
+
