@@ -11,74 +11,27 @@
 <h2>EmployeeDashboard</h2>
 <h2>Welcome to   @employeeName  Employee Dashboard!</h2>
 
-
-<div>
-    @using (Html.BeginForm("PunchIn", "Employee", FormMethod.Post, new { @class = "form-inline", role = "form" }))
-    {
-        @Html.AntiForgeryToken()
-
-        @*<label>
-                <input type="radio" name="entryType" value="PunchIn" checked /> Punch In
-            </label>
-            <button type="submit" class="btn btn-primary">Submit Punch In</button>*@
-        @Html.HiddenFor(m => m.EmployeeId)
-
-        <label class="radio-inline">
-            @Html.RadioButtonFor(m => m.EntryType, "PunchIn", new { id = "punchInRadio" })
-            Punch In
-        </label>
-
-    }
-
-    @using (Html.BeginForm("PunchOut", "Employee", FormMethod.Post, new { @class = "form-inline", role = "form" }))
-     {
-        @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.EmployeeId)
-        <label class="radio-inline">
-            @Html.RadioButtonFor(m => m.EntryType, "PunchOut", new { id = "punchOutRadio" })
-            Punch Out
-        </label>
-
-
-        @*<label>
-                <input type="radio" name="entryType" value="PunchOut" /> Punch Out
-            </label>
-            <button type="submit" class="btn btn-primary">Submit Punch Out</button>*@
-     }
-    <button type="submit" class="btn btn-primary">Submit</button>
-</div>
-
-
-
-
-
-
-
-
-
-
-@*<div>
-        <label>Select action:</label><br />
-        <input type="radio" name="actionType" value="PunchIn" id="punchInRadio" /> <label for="punchInRadio">Punch In</label><br />
-        <input type="radio" name="actionType" value="PunchOut" id="punchOutRadio" /> <label for="punchOutRadio">Punch Out</label>
+@using (Html.BeginForm("PunchInOut", "Employee", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.EmployeeId)
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.EntryType, new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.RadioButtonFor(model => model.EntryType, "PunchIn") Punch In
+            @Html.RadioButtonFor(model => model.EntryType, "PunchOut") Punch Out
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Submit" class="btn btn-default" />
+        </div>
     </div>
 
-    <div>
-        <button type="button" id="submitButton">Submit</button>
-    </div>
+}
 
-    @section scripts {
-        <script>
-            $(document).ready(function () {
-                $('#submitButton').click(function () {
-                    var selectedAction = $('input[name="actionType"]:checked').val();
-                    if (selectedAction) {
-                        window.location.href = '/Employee/' + selectedAction;
-                    }
-                });
-            });
-        </script>
-    }*@
+
 
 
 @Html.ActionLink("Attendance Report", "AttendanceReport", "Employee", null, new { @class = "btn btn-secondary" })

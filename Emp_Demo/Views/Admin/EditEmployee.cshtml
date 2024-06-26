@@ -1,11 +1,12 @@
 ﻿@model Emp_Demo.Models.Employeeinfo
 @{
-    ViewBag.Title = "AddEmployee";
+    ViewBag.Title = "EditEmployee";
 }
-<h4>Add Employee</h4>
+
+<h2>EditEmployee</h2>
 
 @using (Html.BeginForm())
- {
+{
     @Html.AntiForgeryToken()
 
     <div class="form-group">
@@ -55,6 +56,7 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Submit</button>
+    @Html.ActionLink("Back to List", "EmployeeManagement")
  }
 
 

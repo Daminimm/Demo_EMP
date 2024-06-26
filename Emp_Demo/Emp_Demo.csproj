@@ -272,6 +272,10 @@
     <Content Include="Views\Admin\AttendanceManagement.cshtml" />
     <Content Include="Views\Employee\EmployeeDashboard.cshtml" />
     <Content Include="Scripts\jquery-2.0.0.min.map" />
+    <Content Include="Views\Admin\EditEmployee.cshtml" />
+    <Content Include="Views\Admin\EditAttendance.cshtml" />
+    <Content Include="Views\Admin\DeleteAttendance.cshtml" />
+    <Content Include="Views\Admin\DeleteEmployee.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
