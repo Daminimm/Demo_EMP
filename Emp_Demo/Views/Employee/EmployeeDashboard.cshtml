@@ -5,17 +5,27 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     string employeeName = ViewBag.EmployeeName;
 }
+<nav class="navbar navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        @*<a class="navbar-brand" href="#">Employee Management System</a>*@
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand mr-auto">Welcome @employeeName to Employee Dashboard!</a>
+    </div>
+</nav>
 
 
 
-<h2>EmployeeDashboard</h2>
-<h2>Welcome to   @employeeName  Employee Dashboard!</h2>
+
+@*<h2>EmployeeDashboard</h2*@>
+@*<h2>Welcome   @employeeName  to  Employee Dashboard!</h2>*@
 
 @using (Html.BeginForm("PunchInOut", "Employee", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.EmployeeId)
-    
+
     <div class="form-group">
         @Html.LabelFor(model => model.EntryType, new { @class = "control-label col-md-2" })
         <div class="col-md-10">
@@ -33,7 +43,10 @@
 
 
 
-
-@Html.ActionLink("Attendance Report", "AttendanceReport", "Employee", null, new { @class = "btn btn-secondary" })
-
+@Html.ActionLink("Generate Report", "AttendanceReport", "Employee", null, new { @class = "btn btn-secondary" })
+<footer class="footer">
+    <div class="container">
+        <p>&copy; @DateTime.Now.Year  Employee Management System</p>
+    </div>
+</footer>
 

@@ -125,6 +125,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\footer.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
@@ -199,6 +200,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
+    <Compile Include="CustomValidation\CustomPasswordAttribute .cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -266,16 +268,15 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Admin\AdminDashboard.cshtml" />
-    <Content Include="Views\Admin\EmployeeManagement.cshtml" />
     <Content Include="Views\Admin\AddEmployee.cshtml" />
     <Content Include="Views\Admin\AttendanceReport.cshtml" />
-    <Content Include="Views\Admin\AttendanceManagement.cshtml" />
     <Content Include="Views\Employee\EmployeeDashboard.cshtml" />
     <Content Include="Scripts\jquery-2.0.0.min.map" />
     <Content Include="Views\Admin\EditEmployee.cshtml" />
     <Content Include="Views\Admin\EditAttendance.cshtml" />
     <Content Include="Views\Admin\DeleteAttendance.cshtml" />
     <Content Include="Views\Admin\DeleteEmployee.cshtml" />
+    <Content Include="Views\Admin\EmployeeList.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

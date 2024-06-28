@@ -18,7 +18,7 @@ namespace Emp_Demo.Models
         public virtual Employeeinfo Employeeinfo { get; set; }
         
         public List<Attendance> Attendances { get; set; }
-        public IEnumerable<SelectListItem> EntryTypeList { get; set; }
+   
 
 
 

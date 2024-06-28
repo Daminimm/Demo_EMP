@@ -9,9 +9,11 @@
 
 namespace Emp_Demo.Models
 {
+    using Emp_Demo.CustomValidation;
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Userlogin
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -21,8 +23,13 @@ namespace Emp_Demo.Models
         }
     
         public int UserId { get; set; }
+        [Required(ErrorMessage = "Username is required.")]
+
         public string Username { get; set; }
+        [Required(ErrorMessage = "Password is required.")]
+        [CustomPassword(6, ErrorMessage = "Password must be at least 6 characters long, contain at least one digit, and one special character.")]
         public string Password { get; set; }
+       
         public string Role { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

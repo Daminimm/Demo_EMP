@@ -10,17 +10,21 @@ using Emp_Demo.Models;
 
 namespace Emp_Demo.Controllers
 {
+
     public class AdminController : Controller
     {
         Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
         // GET: Admin
         [HttpGet]
+   
         public ActionResult AdminDashboard()
         {
             return View();
         }
         [HttpGet]
-        public ActionResult EmployeeManagement()
+        //[ValidateAntiForgeryToken]
+
+        public ActionResult EmployeeList()
         {
             Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
             List<Employeeinfo> EmployeeList = DbContext.Employeeinfoes.ToList();
@@ -29,6 +33,7 @@ namespace Emp_Demo.Controllers
         }
 
         [HttpGet]
+      
         public ActionResult AddEmployee()
         {
 
@@ -36,6 +41,7 @@ namespace Emp_Demo.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public ActionResult AddEmployee(Employeeinfo MODEL)
         {
             Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
@@ -43,12 +49,13 @@ namespace Emp_Demo.Controllers
             {
                 DbContext.Employeeinfoes.Add(MODEL);
                 DbContext.SaveChanges();
-                return RedirectToAction("EmployeeManagement");
+                return RedirectToAction("EmployeeList");
             }
 
             return View();
         }
         [HttpGet]
+   
         public ActionResult EditEmployee(int? id )
         {
             var employee = DbContext.Employeeinfoes.Where(x => x.EmployeeId == id).FirstOrDefault();
@@ -57,6 +64,7 @@ namespace Emp_Demo.Controllers
             return View(employee);
         }
         [HttpPost]
+     
         public ActionResult EditEmployee(Employeeinfo model,int id )
         {
             var employee = DbContext.Employeeinfoes.Where(x => x.EmployeeId == id).FirstOrDefault();
@@ -75,27 +83,25 @@ namespace Emp_Demo.Controllers
             if (ModelState.IsValid)
             {
                 DbContext.SaveChanges();
-                return RedirectToAction("EmployeeManagement");
+                return RedirectToAction("EmployeeList");
             }
 
             return View(employee);
         }
+        [HttpDelete]
+     
         public ActionResult DeleteEmployee(int? id)
         {
 
             var employee = DbContext.Employeeinfoes.Where(x => x.EmployeeId == id).FirstOrDefault();
             DbContext.Employeeinfoes.Remove(employee);
             DbContext.SaveChanges();
-            return RedirectToAction("EmployeeManagement");
+            return RedirectToAction("EmployeeList");
         }
 
-        [HttpGet]
-        public ActionResult AttendanceManagement()
-        {
 
-            return View();
-        }
         [HttpGet]
+  
         public ActionResult AttendanceReport()
         {
             var employees = DbContext.Employeeinfoes.Select(e => new { e.EmployeeId, e.EmployeeName }).ToList();
@@ -104,6 +110,7 @@ namespace Emp_Demo.Controllers
             return View(); // Pass an empty list initially
         }
         [HttpPost]
+     
         public ActionResult AttendanceReport(int employeeId)
         {
             var employees = DbContext.Employeeinfoes.Select(e => new { e.EmployeeId, e.EmployeeName }).ToList();
@@ -115,11 +122,11 @@ namespace Emp_Demo.Controllers
                 if (selectedEmployee != null)
                 {
                     ViewBag.SelectedEmployeeName = selectedEmployee.EmployeeName;
+              
 
                     var attendances = DbContext.Attendances
-                        .Where(a => a.EmployeeId == employeeId)
-                        .OrderByDescending(a => a.Timestamp)
-                        .ToList();
+                    .Where(a => a.EmployeeId == employeeId)
+                     .ToList();
 
                     return View(attendances);
                 }
@@ -128,43 +135,47 @@ namespace Emp_Demo.Controllers
            
             return View(new List<Attendance>());
         }
+
         [HttpGet]
+
         public ActionResult EditAttendance(int? id)
         {
-          
+
             var attendance = DbContext.Attendances.Where(x => x.EmployeeId == id).FirstOrDefault();
             var employees = DbContext.Employeeinfoes.Select(e => new { e.EmployeeId, e.EmployeeName }).ToList();
             ViewBag.employeeList = employees.Select(e => new SelectListItem { Value = e.EmployeeId.ToString(), Text = e.EmployeeName }).ToList();
-        
+
             return View(attendance);
         }
         [HttpPost]
-        public ActionResult EditAttendance(Attendance model, int id)
+     
+        public ActionResult EditAttendance(AttendanceViewModel model, int id)
         {
-            var attendance = DbContext.Attendances.Where(x => x.EmployeeId == id).FirstOrDefault();
-            if (attendance == null)
+          
+            var employees = DbContext.Employeeinfoes.Select(e => new { e.EmployeeId, e.EmployeeName }).ToList();
+            ViewBag.employeeList = employees.Select(e => new SelectListItem { Value = e.EmployeeId.ToString(), Text = e.EmployeeName }).ToList();
+    
+            if (ModelState.IsValid)
             {
+                var attendance = DbContext.Attendances.Find(model.AttendanceId);
+                if (attendance == null)
+                {
+                    return HttpNotFound();
+                }
+
                 attendance.Employeeinfo.EmployeeName = model.Employeeinfo.EmployeeName;
                 attendance.AttendanceDate = model.AttendanceDate;
                 attendance.Timestamp = model.Timestamp;
                 attendance.EntryType = model.EntryType.ToString();
-            }
-
-            if (ModelState.IsValid)
-            {
-              
                 DbContext.SaveChanges();
                 return RedirectToAction("AttendanceReport");
             }
 
-            var employees = DbContext.Employeeinfoes.Select(e => new { e.EmployeeId, e.EmployeeName }).ToList();
-            ViewBag.employeeList = employees.Select(e => new SelectListItem { Value = e.EmployeeId.ToString(), Text = e.EmployeeName }).ToList();
-        
-
-
-            return View(attendance);
+     
+            return View(model);
         }
         [HttpGet]
+      
         public ActionResult DeleteAttendance(int? id)
         {
 

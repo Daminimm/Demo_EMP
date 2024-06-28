@@ -1,4 +1,4 @@
-﻿using System;
+﻿  using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,10 +10,14 @@ using System.Data.Entity;
 
 namespace Emp_Demo.Controllers
 {
+
     public class EmployeeController : BaseController
     {
-        // GET: Employee
+    
         Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
+        // GET: Employee
+        [HttpGet]
+   
         public ActionResult EmployeeDashboard()
         {
             int userId = GetLoggedInUserId(); // Replace with your method to get logged in user ID
@@ -52,6 +56,7 @@ namespace Emp_Demo.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+    
         public ActionResult PunchInOut(AttendanceViewModel model)
         {
             if (ModelState.IsValid)
@@ -74,10 +79,8 @@ namespace Emp_Demo.Controllers
             return View(model); 
         }
 
-  
+        [HttpGet]
 
-
-      [HttpGet]
         public ActionResult AttendanceReport( )
         {
             int userId = GetLoggedInUserId();

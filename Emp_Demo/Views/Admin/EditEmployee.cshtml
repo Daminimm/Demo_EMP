@@ -2,63 +2,81 @@
 @{
     ViewBag.Title = "EditEmployee";
 }
+<style>
+    label.required::after {
+        content: " *";
+        color: red;
+    }
+</style>
 
 <h2>EditEmployee</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("EditEmployee", "Admin", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-group">
-        @Html.LabelFor(Model => Model.EmployeeName)
+<div class="form-group">
+    
+        @Html.LabelFor(Model => Model.EmployeeName, "Employee Name", htmlAttributes: new { @class = "control-label col-md-2 required" })
         @Html.TextBoxFor(model => model.EmployeeName, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.EmployeeName)
-    </div>
+        @Html.ValidationMessageFor(Model => Model.EmployeeName, "", new { @class = "text-danger" })
+
+</div>
     <div class="form-group">
-        @Html.LabelFor(model => model.Email)
+        @Html.LabelFor(Model => Model.Email, "Email", htmlAttributes: new { @class = "control-label col-md-2 required" })
         @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.Email)
+        @Html.ValidationMessageFor(Model => Model.Email, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        @Html.LabelFor(model => model.Contact)
+        @Html.LabelFor(Model => Model.Contact, "Contact", htmlAttributes: new { @class = "control-label col-md-2 required" })
         @Html.TextBoxFor(model => model.Contact, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.Contact)
+        @Html.ValidationMessageFor(Model => Model.Contact, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        @Html.LabelFor(model => model.Address)
+        @Html.LabelFor(Model => Model.Address, "Address", htmlAttributes: new { @class = "control-label col-md-2 required" })
         @Html.TextBoxFor(model => model.Address, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.Address)
+        @Html.ValidationMessageFor(Model => Model.Department, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        @Html.LabelFor(model => model.Designation)
+        @Html.LabelFor(Model => Model.Designation, "Designation", htmlAttributes: new { @class = "control-label col-md-2 required" })
         @Html.TextBoxFor(model => model.Designation, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.Designation)
+        @Html.ValidationMessageFor(Model => Model.Designation, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        @Html.LabelFor(model => model.Department)
-        @Html.TextBoxFor(model => model.Department, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.Department)
+        @Html.LabelFor(Model => Model.Department, "Department", htmlAttributes: new { @class = "control-label col-md-2 required" })
+        <select class="form-select" id="Department" name="Department">
+            <option selected>Choose...</option>
+            <option value="Technical">Technical</option>
+            <option value="Non-Technical">Non-Technical</option>
+        </select>
+        @*@Html.TextBoxFor(model => model.Department, new { @class = "form-control" })*@
+        @Html.ValidationMessageFor(Model => Model.Department, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        @Html.LabelFor(model => model.Userlogin.Username)
+        @Html.LabelFor(Model => Model.Userlogin.Username, "Username", htmlAttributes: new { @class = "control-label col-md-2 required" })
         @Html.TextBoxFor(model => model.Userlogin.Username, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.Userlogin.Username)
+        @Html.ValidationMessageFor(Model => Model.Userlogin.Username, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        @Html.LabelFor(model => model.Userlogin.Password)
+        @Html.LabelFor(Model => Model.Userlogin.Password, "Password", htmlAttributes: new { @class = "control-label col-md-2 required" })
         @Html.TextBoxFor(model => model.Userlogin.Password, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.Userlogin.Password)
+        @Html.ValidationMessageFor(Model => Model.Userlogin.Password, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        @Html.LabelFor(model => model.Userlogin.Role)
-        @Html.TextBoxFor(model => model.Userlogin.Role, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.Userlogin.Role)
+        @Html.LabelFor(Model => Model.Userlogin.Role, "Role", htmlAttributes: new { @class = "control-label col-md-2 required" })
+        <select class="form-select" id="Userlogin_Role" name="Userlogin.Role" >
+            <option selected>Choose...</option>
+            <option value="Admin" @(Model.Userlogin.Role == "Admin" ? "selected" : "")>Admin</option>
+            <option value="Employee" @(Model.Userlogin.Role == "Employee" ? "selected" : "")>Employee</option>
+        </select>
+        @*@Html.TextBoxFor(model => model.Userlogin.Role, new { @class = "form-control" })*@
+        @Html.ValidationMessageFor(Model => Model.Userlogin.Role, "", new { @class = "text-danger" })
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+        @Html.ActionLink("Back to List", "EmployeeList")
+
     </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
-    @Html.ActionLink("Back to List", "EmployeeManagement")
  }
-
 
 
 

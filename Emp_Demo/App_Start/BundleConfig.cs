@@ -28,7 +28,8 @@ namespace Emp_Demo.App_Start
             // CSS bundle (if needed)
             bundles.Add(new StyleBundle("~/Content/css").Include(
                         "~/Content/bootstrap.css",
-                        "~/Content/site.css"));
+                        "~/Content/site.css",
+                        "~/Content/footer.css"));
 
             // Enable bundling and minification
             BundleTable.EnableOptimizations = true;
