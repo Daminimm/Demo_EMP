@@ -11,8 +11,7 @@ namespace Emp_Demo.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class Employeeinfo
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -20,20 +19,14 @@ namespace Emp_Demo.Models
         {
             this.Attendances = new HashSet<Attendance>();
         }
-    
+       
         public int EmployeeId { get; set; }
         public int UserId { get; set; }
-        [Required(ErrorMessage = " EmployeeName is required.")]
         public string EmployeeName { get; set; }
-        [Required(ErrorMessage = " Email is required.")]
         public string Email { get; set; }
-        [Required(ErrorMessage = " Contact is required.")]
         public string Contact { get; set; }
-        [Required(ErrorMessage = "Department is required.")]
         public string Department { get; set; }
-        [Required(ErrorMessage = "Address is required.")]
         public string Address { get; set; }
-        [Required(ErrorMessage = "Designation is required.")]
         public string Designation { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

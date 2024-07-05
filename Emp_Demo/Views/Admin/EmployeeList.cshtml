@@ -18,31 +18,33 @@
             <th scope="col">Department</th>
             <th scope="col">Username</th>
             <th scope="col">Password</th>
+            <th scope="col">Role</th>
             <th scope="col">Action</th>
         </tr>
     </thead>
     <tbody>
         @if (Model != null && Model.Count() > 0)
         {
-            int index = 1; // Variable to keep track of row number
+            int index = 1;
             foreach (var item in Model)
             {
-                <tr>
-                    <th scope="row">@index</th>
-                    <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Contact)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Address)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Designation)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Department)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Userlogin.Username)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Userlogin.Password)</td>
-                    <td>
-                        @Html.ActionLink(" ", "EditEmployee", new { ID = item.EmployeeId }, new { @class = "bi bi-pen-fill", style = "text-decoration: none;" })
-                        |
-                        @Html.ActionLink(" ", "DeleteEmployee", new { ID = item.EmployeeId }, new { @class = "bi bi-trash-fill delete-link", id = "deleteLink" })
-                    </td>
-                </tr>
+             <tr>
+                 <th scope="row">@index</th>
+                 <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                 <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                 <td>@Html.DisplayFor(modelItem => item.Contact)</td>
+                 <td>@Html.DisplayFor(modelItem => item.Address)</td>
+                <td>@Html.DisplayFor(modelItem => item.Designation)</td>
+                <td>@Html.DisplayFor(modelItem => item.Department)</td>
+                <td>@Html.DisplayFor(modelItem => item.Userlogin.Username)</td>
+                <td>@Html.DisplayFor(modelItem => item.Userlogin.Password)</td>
+                <td>@Html.DisplayFor(modelItem => item.Userlogin.Role)</td>
+                <td>
+                    @Html.ActionLink(" ", "EditEmployee", new { id = item.EmployeeId }, new { @class = "bi bi-pen-fill", style = "text-decoration: none;" })
+                    |
+                    @Html.ActionLink(" ", "DeleteEmployee", new { id = item.EmployeeId }, new { @class = "bi bi-trash-fill delete-link", id = "deleteLink" })
+               </td>
+             </tr>
                 index++;
             }
         }

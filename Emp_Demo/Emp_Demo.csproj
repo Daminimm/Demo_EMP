@@ -57,6 +57,10 @@
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.5.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.5.3.2\lib\net46\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
@@ -211,6 +215,7 @@
     <Compile Include="Models\Employeeinfo.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\EmployeeinfoViewModel.cs" />
     <Compile Include="Models\EntryTypeEnum.cs" />
     <Compile Include="Models\Model1.Context.cs">
       <AutoGen>True</AutoGen>
@@ -264,19 +269,21 @@
     <Content Include="Scripts\bootstrap.esm.js.map" />
     <Content Include="Scripts\bootstrap.bundle.min.js.map" />
     <Content Include="Scripts\bootstrap.bundle.js.map" />
-    <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Admin\AdminDashboard.cshtml" />
-    <Content Include="Views\Admin\AddEmployee.cshtml" />
     <Content Include="Views\Admin\AttendanceReport.cshtml" />
     <Content Include="Views\Employee\EmployeeDashboard.cshtml" />
     <Content Include="Scripts\jquery-2.0.0.min.map" />
     <Content Include="Views\Admin\EditEmployee.cshtml" />
-    <Content Include="Views\Admin\EditAttendance.cshtml" />
     <Content Include="Views\Admin\DeleteAttendance.cshtml" />
     <Content Include="Views\Admin\DeleteEmployee.cshtml" />
     <Content Include="Views\Admin\EmployeeList.cshtml" />
+    <Content Include="Views\Admin\EditAttendance.cshtml" />
+    <Content Include="Views\Admin\AddEmployee.cshtml" />
+    <Content Include="Views\Shared\_EmployeeLayout.cshtml" />
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "_EmployeeLayout";
+}
+
+<h2>_EmployeeLayout</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div class="navbar">
+        @* Other navigation items *@
+        @using (Html.BeginForm("LogoutPost", "Account", FormMethod.Post))
+        {
+@Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-link">Logout</button>}
+    </div>
+    <div class="content">
+        @RenderBody()
+    </div>
+</body>
+</html>
+

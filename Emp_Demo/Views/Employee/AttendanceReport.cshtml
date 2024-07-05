@@ -2,10 +2,17 @@
 @{
     ViewBag.Title = "AttendanceReport";
 }
+<link href="~/Content/footer.css" rel="stylesheet" />
+
+<nav class="navbar navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        @*<a class="navbar-brand" href="#">Employee Management System</a>*@
+        
+        <a class="navbar-brand mr-auto">Attendance Report </a>
+    </div>
+</nav>
 
 
-<h2>AttendanceReport</h2>
-<h2>Attendance Report</h2>
 
 <table class="table table-striped">
     <thead>
@@ -13,7 +20,7 @@
 
             <th>Employee Name</th>
             <th>Attendance Date</th>
-            <th>Timestamp</th>
+            <th>Attendance Time </th>
             <th>Entry Type</th>
         </tr>
     </thead>
@@ -27,22 +34,28 @@
 
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.AttendanceDate)
+                    @item.AttendanceDate.ToString("dd-MM-yyyy")
+                    @*@Html.DisplayFor(modelItem => item.AttendanceDate)*@
                 </td>
                 <td>
-
-                    @Html.DisplayFor(modelItem => item.Timestamp)
+                    @item.Timestamp.ToString("HH:mm:ss")
+                    @*@Html.DisplayFor(modelItem => item.Timestamp)*@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.EntryType)
                 </td>
-                
+
 
             </tr>
 
          }
     </tbody>
 </table>
+<footer class="footer">
+    <div class="container">
+        <p>&copy; @DateTime.Now.Year  Employee Management System</p>
+    </div>
+</footer>
 
 
 

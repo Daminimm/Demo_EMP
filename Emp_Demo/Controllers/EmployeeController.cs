@@ -1,4 +1,4 @@
-﻿  using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -15,32 +15,131 @@ namespace Emp_Demo.Controllers
     {
     
         Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
-        // GET: Employee
+        //public ActionResult EmployeeDashboard()
+        //{
+        //    int userId = GetLoggedInUserId();
+        //    var employee = DbContext.Employeeinfoes.FirstOrDefault(e => e.Userlogin.UserId == userId);
+
+        //    if (employee != null)
+        //    {
+
+
+        //        var attendances = DbContext.Attendances.Where(a => a.EmployeeId == employee.EmployeeId).ToList();
+        //        var existingAttendance = DbContext.Attendances
+        //            .FirstOrDefault(a => a.EmployeeId == employee.EmployeeId
+        //                                 && DbFunctions.TruncateTime(a.AttendanceDate) == DbFunctions.TruncateTime(DateTime.Today));
+
+
+        //        if (existingAttendance == null)
+        //        {
+
+        //            ViewBag.EmployeeName = employee.EmployeeName;
+
+        //            var model = new AttendanceViewModel
+        //            {
+        //                EmployeeId = employee.EmployeeId,
+        //                AttendanceDate = DateTime.Today,
+        //                Timestamp = DateTime.Now,
+        //               Attendances =attendances
+        //            };
+
+
+        //            var lastAttendance = model.Attendances.OrderByDescending(a => a.AttendanceDate).FirstOrDefault();
+        //            if (lastAttendance == null || lastAttendance.EntryType == EntryTypeEnum.PunchOut.ToString())
+        //            {
+        //                model.EntryType = EntryTypeEnum.PunchIn;
+        //            }
+        //            else if (lastAttendance.EntryType == EntryTypeEnum.PunchIn.ToString())
+        //            {
+        //                model.EntryType = EntryTypeEnum.PunchOut;
+        //            }
+
+        //            return View(model);
+        //        }
+        //        else
+        //        {
+
+        //            return RedirectToAction("AttendanceExists", "Error"); 
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //}
+
+        //[HttpGet]
+
+        //public ActionResult EmployeeDashboard()
+        //{
+        //    int userId = GetLoggedInUserId();
+        //    var employee = DbContext.Employeeinfoes.FirstOrDefault(e => e.Userlogin.UserId == userId);
+
+        //    if (employee != null)
+        //    {
+        //        var attendances = DbContext.Attendances.Where(a => a.EmployeeId == employee.EmployeeId).ToList();
+        //        var lastAttendance = attendances.OrderByDescending(a => a.AttendanceDate).FirstOrDefault();
+        //        ViewBag.EmployeeName = employee.EmployeeName;
+
+        //        var model = new AttendanceViewModel
+        //        {
+        //            EmployeeId = employee.EmployeeId,
+        //            AttendanceDate = DateTime.Today,
+        //            Timestamp = DateTime.Now,
+
+        //            Attendances = attendances
+
+        //        };
+
+        //        if (lastAttendance == null)
+        //        {
+
+        //            model.EntryType = EntryTypeEnum.PunchIn;
+        //        }
+        //        else if (lastAttendance.EntryType == EntryTypeEnum.PunchIn.ToString())
+        //        {
+
+        //            model.EntryType = EntryTypeEnum.PunchOut;
+        //        }
+        //        else if (lastAttendance.EntryType == EntryTypeEnum.PunchOut.ToString())
+        //        {
+
+        //            model.EntryType = EntryTypeEnum.PunchIn;
+        //        }
+
+
+        //        return View(model);
+        //    }
+        //    else
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //}
+        
         [HttpGet]
-   
         public ActionResult EmployeeDashboard()
         {
-            int userId = GetLoggedInUserId(); // Replace with your method to get logged in user ID
+            int userId = GetLoggedInUserId();
             var employee = DbContext.Employeeinfoes.FirstOrDefault(e => e.Userlogin.UserId == userId);
 
             if (employee != null)
             {
                 var attendances = DbContext.Attendances.Where(a => a.EmployeeId == employee.EmployeeId).ToList();
-                var lastAttendance = attendances.OrderByDescending(a => a.Timestamp).FirstOrDefault();
+                var lastAttendance = attendances.OrderByDescending(a => a.AttendanceDate).FirstOrDefault();
                 ViewBag.EmployeeName = employee.EmployeeName;
-
+                 
                 var model = new AttendanceViewModel
                 {
                     EmployeeId = employee.EmployeeId,
                     AttendanceDate = DateTime.Today,
                     Timestamp = DateTime.Now,
-                    
+
                     Attendances = attendances
 
                 };
                 if (lastAttendance == null || lastAttendance.EntryType == EntryTypeEnum.PunchOut.ToString())
                 {
-                    model.EntryType = EntryTypeEnum.PunchIn; 
+                    model.EntryType = EntryTypeEnum.PunchIn;
                 }
                 else if (lastAttendance.EntryType == EntryTypeEnum.PunchIn.ToString())
                 {
@@ -57,7 +156,7 @@ namespace Emp_Demo.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
     
-        public ActionResult PunchInOut(AttendanceViewModel model)
+        public ActionResult PunchInOut(Attendance model )
         {
             if (ModelState.IsValid)
             {
@@ -84,8 +183,15 @@ namespace Emp_Demo.Controllers
         public ActionResult AttendanceReport( )
         {
             int userId = GetLoggedInUserId();
-            var attendances = DbContext.Attendances.Where(a => a.EmployeeId == userId).ToList();
+            var employee = DbContext.Employeeinfoes.FirstOrDefault(e => e.Userlogin.UserId == userId);
+            var attendances = DbContext.Attendances.Where(a => a.EmployeeId == employee.EmployeeId).ToList();
+            var lastAttendance = attendances.OrderByDescending(a => a.Timestamp).FirstOrDefault();
+            ViewBag.EmployeeName = employee.EmployeeName;
             return View(attendances);
+            //int userId = GetLoggedInUserId();
+           
+            //var attendances = DbContext.Attendances.Where(a => a.EmployeeId == ).ToList();
+            //return View(attendances);
         }
 
 

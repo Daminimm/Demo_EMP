@@ -1,99 +1,66 @@
 ﻿@model IEnumerable<Emp_Demo.Models.Employeeinfo>
 @{
     ViewBag.Title = "AdminDashboard";
-    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
 }
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .navbar-brand {
+        margin-left: 30px;
+    }
 
+    .vertical-nav {
+        width: 250px;
+        min-width: 250px;
+        max-width: 250px;
+        z-index: 99;
+        position: fixed;
+        margin-top: 50px;
+        top: 0px;
+        left: 0px;
+        float: left;
+        height: calc(100% - 0px);
+        background-color: #343a40;
+        padding-top: 0px;
+        color: white;
+    }
 
-@*<h4>AdminDashboard</h4>
+    .main-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+        margin-left: 0;
+        margin-top: 56px;
+        padding: 20px;
+        width: 100%;
+        text-align: center;
+    }
 
+    .nav-link {
+        color: rgba(255, 255, 255, 0.5);
+    }
 
-    <p>Welcome to the Admin Dashboard!</p>
-
-
-    <h4>Employee Management</h4>
-
-    <nav>
-        <ul>
-            <li><a href="@Url.Action("EmployeeManagement", "Admin")">Employee Management</a></li>
-            <li><a href="@Url.Action("AttendanceManagement", "Admin")">Attendance Management</a></li>
-        </ul>
-    </nav>*@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Dashboard</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .navbar-brand{
-            margin-left:30px;
-        }
-        .vertical-nav {
-            width: 250px;
-            min-width: 250px;
-            max-width: 250px;
-            z-index: 99;
-            position: fixed;
-            margin-top: 50px;
-            top: 0px;
-            left: 0px;
-            float: left;
-            height: calc(100% - 0px);
-            background-color: #343a40;
-            padding-top: 0px;
+        .nav-link:hover {
             color: white;
         }
 
-        .main-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex: 1;
-            margin-left: 0; /* No margin for the vertical nav */
-            margin-top: 56px; /* Height of the horizontal navbar */
-            padding: 20px;
-            width: 100%; /* Full width */
-            text-align: center;
+    .footer {
+        background-color: #f8f9fa;
+        text-align: center;
+        padding: 10px 0;
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 0
+    }
+
+        .footer p {
+            margin-bottom: 0px;
         }
+</style>
 
-        .nav-link {
-            color: rgba(255, 255, 255, 0.5); /* Lighter text color */
-        }
-
-            .nav-link:hover {
-                color: white; /* Hovered link text color */
-            }
-
-        .footer {
-            background-color: #f8f9fa;
-            text-align: center;
-            padding: 10px 0;
-            width: 100%;
-            position: fixed;
-            bottom: 0;
-            left:0
-        }
-        .footer p{
-            margin-bottom:0px;
-        }
-    </style>
-</head>
-<body>
-    <!-- Horizontal Navigation Bar -->
-    @*<nav class="navbar navbar-dark bg-dark fixed-top">
-
-            <div class="container-fluid">
-
-                <button class="navbar-toggler mr-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-
-                    <span class="navbar-toggler-icon"> </span>
-
-                </button>
-
-                <a class="navbar-brand mr-auto" href="#">Employee Management System</a>
-            </div>
-
-        </nav>*@
     <nav class="navbar navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
             @*<a class="navbar-brand" href="#">Employee Management System</a>*@
@@ -101,11 +68,13 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <a class="navbar-brand mr-auto">Welcome to the Admin Dashboard</a>
+            @using (Html.BeginForm("LogoutPost", "Account", FormMethod.Post, new { @class = "form-inline" }))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-outline-danger my-2 my-sm-0">Logout</button>
+            }
         </div>
     </nav>
-
-
-    <!-- Vertical Navigation Bar -->
     <div class="container-fluid">
         <div class="vertical-nav collapse" id="navbarToggleExternalContent">
             <div class="bg-dark p-4">
@@ -145,20 +114,3 @@
         </div>
     </div>
 
-
-    @*<div class="main-content">
-            <h4>Welcome to the Admin Dashboard</h4>
-
-        </div>*@
-
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    @*<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>*@
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
-<footer class="footer">
-    <div class="container">
-        <p>&copy; @DateTime.Now.Year  Employee Management System</p>
-    </div>
-</footer>

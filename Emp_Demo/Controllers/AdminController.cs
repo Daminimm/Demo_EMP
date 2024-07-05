@@ -1,28 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Emp_Demo.Enums;
 using Emp_Demo.Models;
-
 
 namespace Emp_Demo.Controllers
 {
 
     public class AdminController : Controller
     {
+
         Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
         // GET: Admin
         [HttpGet]
-   
+
         public ActionResult AdminDashboard()
         {
             return View();
         }
         [HttpGet]
-        //[ValidateAntiForgeryToken]
 
         public ActionResult EmployeeList()
         {
@@ -31,41 +27,127 @@ namespace Emp_Demo.Controllers
             return View(EmployeeList);
 
         }
-
         [HttpGet]
-      
         public ActionResult AddEmployee()
         {
-
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-
-        public ActionResult AddEmployee(Employeeinfo MODEL)
+        public ActionResult AddEmployee(EmployeeinfoViewModel model)
         {
-            Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
-            if (ModelState.IsValid)
+            try
             {
-                DbContext.Employeeinfoes.Add(MODEL);
-                DbContext.SaveChanges();
-                return RedirectToAction("EmployeeList");
-            }
+                Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
+                {
+                    if (ModelState.IsValid)
+                    {
+                     
+                        var employee = new Employeeinfo
+                        {
+                            EmployeeId=model.EmployeeId,
+                            EmployeeName = model.EmployeeName,
+                            Email = model.Email,
+                            Contact = model.Contact,
+                            Department = model.Department,
+                            Address = model.Address,
+                            Designation = model.Designation,
+                            UserId = model.UserId,
+                            Userlogin = new Userlogin
+                            {
+                                Username = model.Username,
+                                Password = model.Password,
+                                Role = model.Role
+                            }
 
-            return View();
+                        };
+
+                        DbContext.Employeeinfoes.Add(employee);
+                        DbContext.SaveChanges();
+                        return RedirectToAction("EmployeeList");
+                    }
+                }
+            }
+          
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while processing your request. Please try again later.");
+            }
+       
+
+            return View(model);
         }
+
+
+
+
+
+
+
+        //[HttpGet]
+
+        //public ActionResult AddEmployee()
+        //{
+        //    return View();
+
+
+        //}
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult AddEmployee(Employeeinfo model)
+        //{
+        //    try
+        //    {
+        //        using (var DbContext = new Demo_EmployeeManagementEntities())
+        //        {
+        //            if (ModelState.IsValid)
+        //            {
+        //                DbContext.Employeeinfoes.Add(model);
+        //                DbContext.SaveChanges();
+        //                return RedirectToAction("EmployeeList");
+        //            }
+        //        }
+        //    }
+        //    catch (Exception )
+        //    {
+        //        ModelState.AddModelError("", "An error occurred while processing your request. Please try again later.");
+        //    }
+
+
+        //    return View(model);
+        //}
+
+
+        //[HttpPost]
+        ////[ValidateAntiForgeryToken]
+
+        //public ActionResult AddEmployee(Employeeinfo MODEL)
+        //{
+
+
+        //    Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        DbContext.Employeeinfoes.Add(MODEL);
+        //        DbContext.SaveChanges();
+        //        return RedirectToAction("EmployeeList");
+        //    }
+
+
+        //    return View();
+        //}
         [HttpGet]
-   
-        public ActionResult EditEmployee(int? id )
+
+        public ActionResult EditEmployee(int id)
         {
             var employee = DbContext.Employeeinfoes.Where(x => x.EmployeeId == id).FirstOrDefault();
-
-
             return View(employee);
         }
         [HttpPost]
-     
-        public ActionResult EditEmployee(Employeeinfo model,int id )
+
+        public ActionResult EditEmployee(Employeeinfo model, int id)
         {
             var employee = DbContext.Employeeinfoes.Where(x => x.EmployeeId == id).FirstOrDefault();
             if (employee != null)
@@ -88,8 +170,6 @@ namespace Emp_Demo.Controllers
 
             return View(employee);
         }
-        [HttpDelete]
-     
         public ActionResult DeleteEmployee(int? id)
         {
 
@@ -98,88 +178,93 @@ namespace Emp_Demo.Controllers
             DbContext.SaveChanges();
             return RedirectToAction("EmployeeList");
         }
-
-
         [HttpGet]
-  
+
         public ActionResult AttendanceReport()
         {
-            var employees = DbContext.Employeeinfoes.Select(e => new { e.EmployeeId, e.EmployeeName }).ToList();
-            ViewBag.employeeList = employees.Select(e => new SelectListItem { Value = e.EmployeeId.ToString(), Text = e.EmployeeName }).ToList();
-       
-            return View(); // Pass an empty list initially
+            var employees = DbContext.Employeeinfoes.Select(x => new { x.EmployeeId, x.EmployeeName }).ToList();
+            ViewBag.employeeList = employees.Select(x => new SelectListItem { Value = x.EmployeeId.ToString(), Text = x.EmployeeName }).ToList();
+            return View();
         }
-        [HttpPost]
-     
-        public ActionResult AttendanceReport(int employeeId)
-        {
-            var employees = DbContext.Employeeinfoes.Select(e => new { e.EmployeeId, e.EmployeeName }).ToList();
-            ViewBag.employeeList = employees.Select(e => new SelectListItem { Value = e.EmployeeId.ToString(), Text = e.EmployeeName }).ToList();
 
-            if (employeeId != 0)
+
+        [HttpPost]
+
+        public ActionResult AttendanceReport(int? employeeId)
+        {
+            var employees = DbContext.Employeeinfoes.Select(X => new { X.EmployeeId, X.EmployeeName }).ToList();
+            ViewBag.employeeList = employees.Select(X => new SelectListItem { Value = X.EmployeeId.ToString(), Text = X.EmployeeName }).ToList();
+
+            if (employeeId.HasValue)
             {
                 var selectedEmployee = DbContext.Employeeinfoes.Find(employeeId);
                 if (selectedEmployee != null)
                 {
                     ViewBag.SelectedEmployeeName = selectedEmployee.EmployeeName;
-              
-
                     var attendances = DbContext.Attendances
                     .Where(a => a.EmployeeId == employeeId)
                      .ToList();
 
-                    return View(attendances);
+                    return View("AttendanceReport", attendances);
                 }
             }
 
-           
-            return View(new List<Attendance>());
+            return View();
         }
-
         [HttpGet]
-
         public ActionResult EditAttendance(int? id)
         {
 
-            var attendance = DbContext.Attendances.Where(x => x.EmployeeId == id).FirstOrDefault();
-            var employees = DbContext.Employeeinfoes.Select(e => new { e.EmployeeId, e.EmployeeName }).ToList();
-            ViewBag.employeeList = employees.Select(e => new SelectListItem { Value = e.EmployeeId.ToString(), Text = e.EmployeeName }).ToList();
-
+            var attendance = DbContext.Attendances.Where(x => x.AttendanceId == id).FirstOrDefault();
+        
+            if (attendance == null)
+            {
+                return HttpNotFound();
+            }
             return View(attendance);
         }
         [HttpPost]
-     
-        public ActionResult EditAttendance(AttendanceViewModel model, int id)
+        [ValidateAntiForgeryToken]
+        public ActionResult EditAttendance(Attendance model)
         {
-          
-            var employees = DbContext.Employeeinfoes.Select(e => new { e.EmployeeId, e.EmployeeName }).ToList();
-            ViewBag.employeeList = employees.Select(e => new SelectListItem { Value = e.EmployeeId.ToString(), Text = e.EmployeeName }).ToList();
-    
-            if (ModelState.IsValid)
+            try
             {
-                var attendance = DbContext.Attendances.Find(model.AttendanceId);
-                if (attendance == null)
+                if (ModelState.IsValid)
                 {
-                    return HttpNotFound();
-                }
+                    var attendance = DbContext.Attendances.Find(model.AttendanceId);
+       
 
-                attendance.Employeeinfo.EmployeeName = model.Employeeinfo.EmployeeName;
-                attendance.AttendanceDate = model.AttendanceDate;
-                attendance.Timestamp = model.Timestamp;
-                attendance.EntryType = model.EntryType.ToString();
-                DbContext.SaveChanges();
-                return RedirectToAction("AttendanceReport");
+                    if (attendance == null)
+                    {
+                        return HttpNotFound();
+                    }
+
+
+                    attendance.EmployeeId = model.EmployeeId;
+                    attendance.AttendanceDate = model.AttendanceDate;
+                    attendance.Timestamp = model.Timestamp;
+                    attendance.EntryType = model.EntryType;
+
+                    DbContext.SaveChanges();
+
+                
+                    return RedirectToAction("AttendanceReport", new { employeeId = model.EmployeeId });
+                }
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("", "An error occurred while processing your request.");
             }
 
-     
+
             return View(model);
         }
         [HttpGet]
-      
-        public ActionResult DeleteAttendance(int? id)
+
+        public ActionResult DeleteAttendance(int? Id)
         {
 
-            var attendance = DbContext.Attendances.Where(x => x.EmployeeId == id).FirstOrDefault();
+            var attendance = DbContext.Attendances.Where(x => x.AttendanceId == Id).FirstOrDefault();
             DbContext.Attendances.Remove(attendance);
             DbContext.SaveChanges();
             return RedirectToAction("AttendanceReport");
@@ -187,8 +272,15 @@ namespace Emp_Demo.Controllers
 
 
     }
+  
+
+
+
 
 }
+
+
+
 
 
 
