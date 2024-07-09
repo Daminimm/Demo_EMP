@@ -5,21 +5,22 @@ using System.Web;
 using System.Web.Mvc;
 using Emp_Demo.Models;
 using Emp_Demo.CustomValidation;
+using System.Web.Security;
 
 namespace Emp_Demo.Controllers
 {
-
+  
     public class AccountController : Controller
     {
         [HttpGet]
-    
+      
         public ActionResult Login()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-      
+    
         public ActionResult Login(Userlogin MODEL)
         {
             Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
@@ -29,6 +30,7 @@ namespace Emp_Demo.Controllers
 
                 if (user != null)
                 {
+                    FormsAuthentication.SetAuthCookie(MODEL.Username, false);
                     Session["UserId"] = user.UserId;
 
                     if (user.Role == "Admin")
@@ -47,6 +49,7 @@ namespace Emp_Demo.Controllers
             return View(MODEL);
         }
         [HttpGet]
+        [Route("logout")]
         public ActionResult Logout()
         {
             
@@ -58,9 +61,10 @@ namespace Emp_Demo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("logout")]
         public ActionResult LogoutPost()
         {
-            
+            FormsAuthentication.SignOut();
             Session.Clear();
 
         

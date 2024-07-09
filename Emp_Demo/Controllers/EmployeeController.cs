@@ -15,136 +15,40 @@ namespace Emp_Demo.Controllers
     {
     
         Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
-        //public ActionResult EmployeeDashboard()
-        //{
-        //    int userId = GetLoggedInUserId();
-        //    var employee = DbContext.Employeeinfoes.FirstOrDefault(e => e.Userlogin.UserId == userId);
 
-        //    if (employee != null)
-        //    {
-
-
-        //        var attendances = DbContext.Attendances.Where(a => a.EmployeeId == employee.EmployeeId).ToList();
-        //        var existingAttendance = DbContext.Attendances
-        //            .FirstOrDefault(a => a.EmployeeId == employee.EmployeeId
-        //                                 && DbFunctions.TruncateTime(a.AttendanceDate) == DbFunctions.TruncateTime(DateTime.Today));
-
-
-        //        if (existingAttendance == null)
-        //        {
-
-        //            ViewBag.EmployeeName = employee.EmployeeName;
-
-        //            var model = new AttendanceViewModel
-        //            {
-        //                EmployeeId = employee.EmployeeId,
-        //                AttendanceDate = DateTime.Today,
-        //                Timestamp = DateTime.Now,
-        //               Attendances =attendances
-        //            };
-
-
-        //            var lastAttendance = model.Attendances.OrderByDescending(a => a.AttendanceDate).FirstOrDefault();
-        //            if (lastAttendance == null || lastAttendance.EntryType == EntryTypeEnum.PunchOut.ToString())
-        //            {
-        //                model.EntryType = EntryTypeEnum.PunchIn;
-        //            }
-        //            else if (lastAttendance.EntryType == EntryTypeEnum.PunchIn.ToString())
-        //            {
-        //                model.EntryType = EntryTypeEnum.PunchOut;
-        //            }
-
-        //            return View(model);
-        //        }
-        //        else
-        //        {
-
-        //            return RedirectToAction("AttendanceExists", "Error"); 
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //}
-
-        //[HttpGet]
-
-        //public ActionResult EmployeeDashboard()
-        //{
-        //    int userId = GetLoggedInUserId();
-        //    var employee = DbContext.Employeeinfoes.FirstOrDefault(e => e.Userlogin.UserId == userId);
-
-        //    if (employee != null)
-        //    {
-        //        var attendances = DbContext.Attendances.Where(a => a.EmployeeId == employee.EmployeeId).ToList();
-        //        var lastAttendance = attendances.OrderByDescending(a => a.AttendanceDate).FirstOrDefault();
-        //        ViewBag.EmployeeName = employee.EmployeeName;
-
-        //        var model = new AttendanceViewModel
-        //        {
-        //            EmployeeId = employee.EmployeeId,
-        //            AttendanceDate = DateTime.Today,
-        //            Timestamp = DateTime.Now,
-
-        //            Attendances = attendances
-
-        //        };
-
-        //        if (lastAttendance == null)
-        //        {
-
-        //            model.EntryType = EntryTypeEnum.PunchIn;
-        //        }
-        //        else if (lastAttendance.EntryType == EntryTypeEnum.PunchIn.ToString())
-        //        {
-
-        //            model.EntryType = EntryTypeEnum.PunchOut;
-        //        }
-        //        else if (lastAttendance.EntryType == EntryTypeEnum.PunchOut.ToString())
-        //        {
-
-        //            model.EntryType = EntryTypeEnum.PunchIn;
-        //        }
-
-
-        //        return View(model);
-        //    }
-        //    else
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //}
-        
         [HttpGet]
         public ActionResult EmployeeDashboard()
         {
+            if (TempData["SuccessMessage"] != null)
+            {
+                ViewBag.SuccessMessage = TempData["SuccessMessage"] as string;
+            }
+            else
+            {
+                ViewBag.ErrorMessage = TempData["ErrorMessage"] as string;
+            }
+
             int userId = GetLoggedInUserId();
             var employee = DbContext.Employeeinfoes.FirstOrDefault(e => e.Userlogin.UserId == userId);
+         
 
             if (employee != null)
             {
                 var attendances = DbContext.Attendances.Where(a => a.EmployeeId == employee.EmployeeId).ToList();
                 var lastAttendance = attendances.OrderByDescending(a => a.AttendanceDate).FirstOrDefault();
                 ViewBag.EmployeeName = employee.EmployeeName;
-                 
+
+
                 var model = new AttendanceViewModel
                 {
-                    EmployeeId = employee.EmployeeId,
-                    AttendanceDate = DateTime.Today,
-                    Timestamp = DateTime.Now,
+                    //EmployeeId = employee.EmployeeId,
+                    ////AttendanceDate = DateTime.Today,
+                    ////Timestamp = DateTime.Now,
 
                     Attendances = attendances
 
                 };
-                if (lastAttendance == null || lastAttendance.EntryType == EntryTypeEnum.PunchOut.ToString())
-                {
-                    model.EntryType = EntryTypeEnum.PunchIn;
-                }
-                else if (lastAttendance.EntryType == EntryTypeEnum.PunchIn.ToString())
-                {
-                    model.EntryType = EntryTypeEnum.PunchOut;
-                }
+
 
                 return View(model);
             }
@@ -155,29 +59,94 @@ namespace Emp_Demo.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-    
-        public ActionResult PunchInOut(Attendance model )
+
+        public ActionResult PunchInOut(AttendanceViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                var attendance = new Attendance
+            
+                if (ModelState.IsValid)
                 {
-                    EmployeeId = model.EmployeeId,
-                    AttendanceDate = DateTime.Today,
-                    Timestamp = DateTime.Now,
-                    EntryType = model.EntryType.ToString()
+                    try
+                    {
+                        int userId = GetLoggedInUserId();
+                        var employee = DbContext.Employeeinfoes.FirstOrDefault(e => e.Userlogin.UserId == userId);
 
-                };
+                        if (employee != null)
+                        {
+                         
+                            var todayPunches = DbContext.Attendances
+                                .Where(a => a.EmployeeId == employee.EmployeeId && DbFunctions.TruncateTime(a.AttendanceDate) == DbFunctions.TruncateTime(DateTime.Today))
+                                .OrderBy(a => a.Timestamp)
+                                .ToList();
 
-                DbContext.Attendances.Add(attendance);
-                DbContext.SaveChanges();
+                       
+                            var lastPunch = todayPunches.LastOrDefault();
 
-                return RedirectToAction("EmployeeDashboard"); 
-            }
+                            if (model.EntryType == EntryTypeEnum.PunchIn)
+                            {
+                           
+                                bool hasPunchInToday = todayPunches.Any(a => a.EntryType == EntryTypeEnum.PunchIn.ToString());
 
-            return View(model); 
+                                if (!hasPunchInToday)
+                                {
+                                 
+                                    var punchIn = new Attendance
+                                    {
+                                        EmployeeId = employee.EmployeeId,
+                                        AttendanceDate = DateTime.Today,
+                                        EntryType = EntryTypeEnum.PunchIn.ToString(),
+                                        Timestamp = DateTime.Now
+                                    };
+                                    DbContext.Attendances.Add(punchIn);
+                                    DbContext.SaveChanges();
+                                    TempData["SuccessMessage"] = "Punched in successfully.";
+                                }
+                                else
+                                {
+                                    TempData["ErrorMessage"] = "You have already punched in today.";
+                                }
+                            }
+                            else if (model.EntryType == EntryTypeEnum.PunchOut)
+                            {
+                                bool hasPunchOutToday = todayPunches.Any(a => a.EntryType == EntryTypeEnum.PunchOut.ToString());
+
+                                if (lastPunch != null && lastPunch.EntryType == EntryTypeEnum.PunchIn.ToString() && !hasPunchOutToday)
+                                {
+                                   
+                                    var punchOut = new Attendance
+                                    {
+                                        EmployeeId = employee.EmployeeId,
+                                        AttendanceDate = DateTime.Today,
+                                        EntryType = EntryTypeEnum.PunchOut.ToString(),
+                                        Timestamp = DateTime.Now
+                                    };
+                                    DbContext.Attendances.Add(punchOut);
+                                    DbContext.SaveChanges();
+                                    TempData["SuccessMessage"] = "Punched out successfully.";
+                                }
+                                else if (lastPunch == null || lastPunch.EntryType == EntryTypeEnum.PunchOut.ToString())
+                                {
+                                    TempData["ErrorMessage"] = "You haven't punched in today or you have already punched out.";
+                                }
+                            }
+
+                            return RedirectToAction("EmployeeDashboard");
+                        }
+
+                        TempData["ErrorMessage"] = "User not found.";
+                    }
+                    catch (Exception ex)
+                    {
+                        TempData["ErrorMessage"] = "An error occurred while processing your request.";
+                    }
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Invalid model state.";
+                }
+
+                return RedirectToAction("EmployeeDashboard");
+          
         }
-
         [HttpGet]
 
         public ActionResult AttendanceReport( )

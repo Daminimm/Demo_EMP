@@ -69,10 +69,11 @@
             </button>
             <a class="navbar-brand mr-auto">Welcome to the Admin Dashboard</a>
             @using (Html.BeginForm("LogoutPost", "Account", FormMethod.Post, new { @class = "form-inline" }))
-            {
+             {
                 @Html.AntiForgeryToken()
+               @*<button type="submit" class="btn btn-danger">Logout</button>*@
                 <button type="submit" class="btn btn-outline-danger my-2 my-sm-0">Logout</button>
-            }
+             }
         </div>
     </nav>
     <div class="container-fluid">

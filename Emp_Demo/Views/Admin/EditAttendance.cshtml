@@ -1,96 +1,74 @@
-﻿
-@model Emp_Demo.Models.Attendance
+﻿@model Emp_Demo.Models.Attendance
+@using Emp_Demo.Enums;
 
 @{
     ViewBag.Title = "Edit Attendance";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+
 <h2>Edit Attendance</h2>
 
-@using (Html.BeginForm("EditAttendance", "Admin", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.AttendanceId)
-    @Html.HiddenFor(model => model.EmployeeId)
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Employeeinfo.EmployeeName)
-        @Html.EditorFor(model => model.Employeeinfo.EmployeeName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-        @Html.ValidationMessageFor(model => model.Employeeinfo.EmployeeName, "", new { @class = "text-danger" })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.AttendanceDate)
-        @Html.EditorFor(model => model.AttendanceDate, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.AttendanceDate, "", new { @class = "text-danger" })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.Timestamp)
-        @Html.EditorFor(model => model.Timestamp, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.Timestamp, "", new { @class = "text-danger" })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.EntryType)
-        @Html.EditorFor(model => model.EntryType, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.EntryType, "", new { @class = "text-danger" })
-    </div>
-
-    <button type="submit" class="btn btn-primary">Save</button>
-    @Html.ActionLink("Cancel", "AttendanceReport", new { employeeId = Model.EmployeeId }, new { @class = "btn btn-secondary" })
-}
-@*@model  Emp_Demo.Models.Attendance
-    @using Emp_Demo.Enums;
-    @{
-        ViewBag.Title = "EditAttendance";
-        Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    }
-    <style>
-        .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
-            margin-top: 15px;
-            margin-bottom: .5rem;
-        }
-    </style>
-
-
-    <h2>EditAttendance</h2>
-
-    @using (Html.BeginForm("EditAttendance", "Admin", FormMethod.Post))
-     {
+<div id="editAttendanceForm">
+    @using (Html.BeginForm("EditAttendance", "Admin", FormMethod.Post, new { id = "attendanceEditForm" }))
+    {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.AttendanceId)
         @Html.HiddenFor(model => model.EmployeeId)
 
-
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.EmployeeId)
+                @Html.TextBoxFor(model => model.EmployeeId, new { @class = "form-control", @readonly = "readonly" })
+            </div>*@
         <div class="form-group">
             @Html.LabelFor(model => model.Employeeinfo.EmployeeName)
-            @Html.EditorFor(model => model.Employeeinfo.EmployeeName, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(Model => Model.Employeeinfo.EmployeeName, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.Employeeinfo.EmployeeName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            @Html.ValidationMessageFor(model => model.Employeeinfo.EmployeeName, "", new { @class = "text-danger" })
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.AttendanceDate)
-
-            @Html.EditorFor(model => model.AttendanceDate, new { htmlAttributes = new { @class = "form-control", @type = "date", @Value = Model.AttendanceDate.ToString("yyyy-MM-dd") } })
-            @Html.ValidationMessageFor(Model => Model.AttendanceDate, "", new { @class = "text-danger" })
-
-
+            @Html.TextBoxFor(model => model.AttendanceDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.Timestamp)
-            @Html.EditorFor(model => model.Timestamp, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(Model => Model.Timestamp, "", new { @class = "text-danger" })
-
+            @Html.TextBoxFor(model => model.Timestamp, "{0:HH:mm:ss}", new { @class = "form-control", type = "time" })
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.EntryType)
             @Html.DropDownListFor(model => model.EntryType, new SelectList(Enum.GetValues(typeof(EntryTypeEnum))), "Select", new { @class = "form-control" })
-            @Html.ValidationMessageFor(Model => Model.EntryType, "", new { @class = "text-danger" })
+            @*@Html.TextBoxFor(model => model.EntryType, new { @class = "form-control" })*@
         </div>
+        <button type="button" id="submitEditForm" class="btn btn-primary">Save</button>
+    }
+</div>
 
-        <button type="submit" class="btn btn-primary">Save</button>
-        @Html.ActionLink("Back to List", "AttendanceReport", null, new { @class = "btn btn-secondary" })
-     }*@
 
-
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#submitEditForm').click(function() {
+                var form = $('#attendanceEditForm');
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            // Redirect to the attendance report with the employeeId
+                            window.location.href = '@Url.Action("AttendanceReport", "Admin")' + '?employeeId=' + response.employeeId;
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert("An error occurred: " + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}
 
 
 

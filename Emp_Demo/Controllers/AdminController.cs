@@ -1,25 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web.Mvc;
 using Emp_Demo.Models;
 
 namespace Emp_Demo.Controllers
 {
-
+    
+    [RoutePrefix("Admin")]
     public class AdminController : Controller
     {
 
         Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
         // GET: Admin
         [HttpGet]
-
+        [Route("AdminDashboard")]
         public ActionResult AdminDashboard()
         {
             return View();
         }
         [HttpGet]
-
+        [Route("EmployeeList")]
         public ActionResult EmployeeList()
         {
             Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
@@ -27,126 +29,74 @@ namespace Emp_Demo.Controllers
             return View(EmployeeList);
 
         }
+
         [HttpGet]
+        [Route("AddEmployee")]
         public ActionResult AddEmployee()
         {
             return View();
-        }
 
+
+        }
+   
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("AddEmployee")]
         public ActionResult AddEmployee(EmployeeinfoViewModel model)
         {
             try
             {
-                Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
+                using (var DbContext = new Demo_EmployeeManagementEntities())
                 {
+
+
                     if (ModelState.IsValid)
                     {
-                     
-                        var employee = new Employeeinfo
+                        Userlogin userLogin = new Userlogin();
+                        userLogin.Username = model.Username;
+                        userLogin.Password = model.Password;
+                        userLogin.Role = model.Role;
+                        DbContext.Userlogins.Add(userLogin);
+                        DbContext.SaveChanges();
+
+                        model.UserId = userLogin.UserId;
+
+                        Employeeinfo employee = new Employeeinfo
                         {
-                            EmployeeId=model.EmployeeId,
                             EmployeeName = model.EmployeeName,
                             Email = model.Email,
                             Contact = model.Contact,
                             Department = model.Department,
                             Address = model.Address,
                             Designation = model.Designation,
-                            UserId = model.UserId,
-                            Userlogin = new Userlogin
-                            {
-                                Username = model.Username,
-                                Password = model.Password,
-                                Role = model.Role
-                            }
-
+                            UserId = model.UserId
                         };
 
                         DbContext.Employeeinfoes.Add(employee);
-                        DbContext.SaveChanges();
-                        return RedirectToAction("EmployeeList");
+                      DbContext.SaveChanges();
+                      return RedirectToAction("EmployeeList");
                     }
                 }
             }
-          
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "An error occurred while processing your request. Please try again later.");
             }
-       
 
-            return View(model);
+
+            return View();
         }
 
 
-
-
-
-
-
-        //[HttpGet]
-
-        //public ActionResult AddEmployee()
-        //{
-        //    return View();
-
-
-        //}
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult AddEmployee(Employeeinfo model)
-        //{
-        //    try
-        //    {
-        //        using (var DbContext = new Demo_EmployeeManagementEntities())
-        //        {
-        //            if (ModelState.IsValid)
-        //            {
-        //                DbContext.Employeeinfoes.Add(model);
-        //                DbContext.SaveChanges();
-        //                return RedirectToAction("EmployeeList");
-        //            }
-        //        }
-        //    }
-        //    catch (Exception )
-        //    {
-        //        ModelState.AddModelError("", "An error occurred while processing your request. Please try again later.");
-        //    }
-
-
-        //    return View(model);
-        //}
-
-
-        //[HttpPost]
-        ////[ValidateAntiForgeryToken]
-
-        //public ActionResult AddEmployee(Employeeinfo MODEL)
-        //{
-
-
-        //    Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        DbContext.Employeeinfoes.Add(MODEL);
-        //        DbContext.SaveChanges();
-        //        return RedirectToAction("EmployeeList");
-        //    }
-
-
-        //    return View();
-        //}
         [HttpGet]
-
+        [Route("EditEmployee/{id}")]
         public ActionResult EditEmployee(int id)
         {
             var employee = DbContext.Employeeinfoes.Where(x => x.EmployeeId == id).FirstOrDefault();
             return View(employee);
         }
         [HttpPost]
-
+        [Route("EditEmployee/{id}")]
         public ActionResult EditEmployee(Employeeinfo model, int id)
         {
             var employee = DbContext.Employeeinfoes.Where(x => x.EmployeeId == id).FirstOrDefault();
@@ -170,6 +120,8 @@ namespace Emp_Demo.Controllers
 
             return View(employee);
         }
+        [HttpPost]
+        [Route("DeleteEmployee/{id}")]
         public ActionResult DeleteEmployee(int? id)
         {
 
@@ -178,22 +130,13 @@ namespace Emp_Demo.Controllers
             DbContext.SaveChanges();
             return RedirectToAction("EmployeeList");
         }
+      
         [HttpGet]
-
-        public ActionResult AttendanceReport()
+        [Route("AttendanceReport")]
+        public ActionResult AttendanceReport(int? employeeId)
         {
             var employees = DbContext.Employeeinfoes.Select(x => new { x.EmployeeId, x.EmployeeName }).ToList();
             ViewBag.employeeList = employees.Select(x => new SelectListItem { Value = x.EmployeeId.ToString(), Text = x.EmployeeName }).ToList();
-            return View();
-        }
-
-
-        [HttpPost]
-
-        public ActionResult AttendanceReport(int? employeeId)
-        {
-            var employees = DbContext.Employeeinfoes.Select(X => new { X.EmployeeId, X.EmployeeName }).ToList();
-            ViewBag.employeeList = employees.Select(X => new SelectListItem { Value = X.EmployeeId.ToString(), Text = X.EmployeeName }).ToList();
 
             if (employeeId.HasValue)
             {
@@ -202,16 +145,25 @@ namespace Emp_Demo.Controllers
                 {
                     ViewBag.SelectedEmployeeName = selectedEmployee.EmployeeName;
                     var attendances = DbContext.Attendances
-                    .Where(a => a.EmployeeId == employeeId)
-                     .ToList();
+                        .Where(a => a.EmployeeId == employeeId)
+                        .OrderBy(a => a.AttendanceDate)
+                        .ToList();
 
-                    return View("AttendanceReport", attendances);
+                    return View(attendances);
                 }
             }
 
             return View();
         }
+        [HttpPost]
+        [Route("AttendanceReport")]
+        public ActionResult AttendanceReport(int employeeId)
+        {
+            return RedirectToAction("AttendanceReport", new { employeeId = employeeId });
+        }
+
         [HttpGet]
+        [Route("EditAttendance/{id}")]
         public ActionResult EditAttendance(int? id)
         {
 
@@ -225,6 +177,7 @@ namespace Emp_Demo.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("EditAttendance/{id}")]
         public ActionResult EditAttendance(Attendance model)
         {
             try
@@ -247,8 +200,8 @@ namespace Emp_Demo.Controllers
 
                     DbContext.SaveChanges();
 
-                
-                    return RedirectToAction("AttendanceReport", new { employeeId = model.EmployeeId });
+                    return Json(new { success = true, employeeId = model.EmployeeId });
+                    //return RedirectToAction("AttendanceReport", new { employeeId = model.EmployeeId });
                 }
             }
             catch (Exception)
@@ -259,8 +212,8 @@ namespace Emp_Demo.Controllers
 
             return View(model);
         }
-        [HttpGet]
-
+        [HttpPost]
+        [Route("DeleteAttendance/{id}")]
         public ActionResult DeleteAttendance(int? Id)
         {
 
@@ -273,10 +226,6 @@ namespace Emp_Demo.Controllers
 
     }
   
-
-
-
-
 }
 
 
