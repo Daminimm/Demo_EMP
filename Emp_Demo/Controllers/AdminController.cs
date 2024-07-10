@@ -7,7 +7,7 @@ using Emp_Demo.Models;
 
 namespace Emp_Demo.Controllers
 {
-    
+ 
     [RoutePrefix("Admin")]
     public class AdminController : Controller
     {
@@ -24,6 +24,10 @@ namespace Emp_Demo.Controllers
         [Route("EmployeeList")]
         public ActionResult EmployeeList()
         {
+            if (TempData["message"] != null)
+            {
+                ViewBag.Message = TempData["message"];
+            }
             Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
             List<Employeeinfo> EmployeeList = DbContext.Employeeinfoes.ToList();
             return View(EmployeeList);
@@ -73,7 +77,8 @@ namespace Emp_Demo.Controllers
                         };
 
                         DbContext.Employeeinfoes.Add(employee);
-                      DbContext.SaveChanges();
+                        TempData["message"] = "Employee Add Successfully";
+                        DbContext.SaveChanges();
                       return RedirectToAction("EmployeeList");
                     }
                 }
@@ -114,13 +119,14 @@ namespace Emp_Demo.Controllers
             }
             if (ModelState.IsValid)
             {
+                TempData["message"] = "Employee Updated Successfully";
                 DbContext.SaveChanges();
                 return RedirectToAction("EmployeeList");
             }
 
             return View(employee);
         }
-        [HttpPost]
+        [HttpGet]
         [Route("DeleteEmployee/{id}")]
         public ActionResult DeleteEmployee(int? id)
         {
@@ -128,6 +134,7 @@ namespace Emp_Demo.Controllers
             var employee = DbContext.Employeeinfoes.Where(x => x.EmployeeId == id).FirstOrDefault();
             DbContext.Employeeinfoes.Remove(employee);
             DbContext.SaveChanges();
+            TempData["message"] = "Employee Deleted Successfully";
             return RedirectToAction("EmployeeList");
         }
       
@@ -135,6 +142,10 @@ namespace Emp_Demo.Controllers
         [Route("AttendanceReport")]
         public ActionResult AttendanceReport(int? employeeId)
         {
+            if (TempData["message"] != null)
+            {
+                ViewBag.Message = TempData["message"];
+            }
             var employees = DbContext.Employeeinfoes.Select(x => new { x.EmployeeId, x.EmployeeName }).ToList();
             ViewBag.employeeList = employees.Select(x => new SelectListItem { Value = x.EmployeeId.ToString(), Text = x.EmployeeName }).ToList();
 
@@ -197,7 +208,7 @@ namespace Emp_Demo.Controllers
                     attendance.AttendanceDate = model.AttendanceDate;
                     attendance.Timestamp = model.Timestamp;
                     attendance.EntryType = model.EntryType;
-
+                    TempData["message"] = "Attendance  Updated Successfully";
                     DbContext.SaveChanges();
 
                     return Json(new { success = true, employeeId = model.EmployeeId });
@@ -212,14 +223,16 @@ namespace Emp_Demo.Controllers
 
             return View(model);
         }
-        [HttpPost]
+        [HttpGet]
         [Route("DeleteAttendance/{id}")]
         public ActionResult DeleteAttendance(int? Id)
         {
 
             var attendance = DbContext.Attendances.Where(x => x.AttendanceId == Id).FirstOrDefault();
             DbContext.Attendances.Remove(attendance);
+            TempData["message"] = "Attendance  Deleted Successfully";
             DbContext.SaveChanges();
+
             return RedirectToAction("AttendanceReport");
         }
 

@@ -5,9 +5,27 @@
     ViewBag.Title = "Edit Attendance";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+<style>
+    form-group {
+        margin-top: 15px;
+        margin-bottom: .5rem;
+        margin-left: 0;
+    }
 
+    .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-top: 1rem !important;
+    }
+</style>
+<nav class="navbar navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        @*<a class="navbar-brand" href="#">Employee Management System</a>*@
 
-<h2>Edit Attendance</h2>
+        <a class="navbar-brand mr-auto"> Edit Attendance Report </a>
+    </div>
+</nav>
+
 
 <div id="editAttendanceForm">
     @using (Html.BeginForm("EditAttendance", "Admin", FormMethod.Post, new { id = "attendanceEditForm" }))
@@ -39,6 +57,10 @@
             @*@Html.TextBoxFor(model => model.EntryType, new { @class = "form-control" })*@
         </div>
         <button type="button" id="submitEditForm" class="btn btn-primary">Save</button>
+        @*@Html.ActionLink("Back to Attendance Report", "AttendanceReport")*@
+        <button type="button" class="btn btn-dark">
+            @Html.ActionLink("Back to Attendance Report", "AttendanceReport", null, new { @style = "color: white;" })
+        </button>
     }
 </div>
 

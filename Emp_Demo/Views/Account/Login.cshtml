@@ -3,17 +3,24 @@
     ViewBag.Title = "Login";
 
 }
+<script type="text/javascript">
+    function preventBack() { window.history.forward(); }
+    setTimeout("preventBack()", 0);
+    window.onunload = function () { null };
+</script>
+
 <style>
     body {
         overflow: hidden;
         background-color: black;
     }
+
     label {
         display: -webkit-box;
     }
 </style>
 <section class="vh-100" style="background-color: black;">
-   
+
     <div class="container py-4 h-60">
         <div class="row d-flex justify-content-center align-items-center ">
             <div class="col-12 col-md-8 col-lg-6 col-xl-5">
@@ -23,46 +30,46 @@
                         <h3 class="mb-5">LogIn</h3>
                         @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                         {
-                        @Html.AntiForgeryToken()
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.Username, new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                <div data-mdb-input-init class="form-outline mb-4">
-                                    @Html.TextBoxFor(m => m.Username, new { @class = "form-control form-control-lg", placeholder = "Enter a valid user name" })
-                                    @*<label class="form-label" for="form3Example3">User Name</label>*@
+                            @Html.AntiForgeryToken()
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Username, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    <div data-mdb-input-init class="form-outline mb-4">
+                                        @Html.TextBoxFor(m => m.Username, new { @class = "form-control form-control-lg", placeholder = "Enter a valid user name" })
+                                        @*<label class="form-label" for="form3Example3">User Name</label>*@
+                                    </div>
+                                    @*@Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })*@
                                 </div>
-                                @*@Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })*@
                             </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.Password, new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                <div data-mdb-input-init class="form-outline mb-4">
-                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control form-control-lg", placeholder = "Enter a valid password" })
-                                    @*@Html.TextBoxFor(m => m.Password, new { @class = "form-control form-control-lg", placeholder = "Enter a valid password" })*@
-                                    @*<label class="form-label" for="form3Example3">password</label>*@
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Password, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    <div data-mdb-input-init class="form-outline mb-4">
+                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control form-control-lg", placeholder = "Enter a valid password" })
+                                        @*@Html.TextBoxFor(m => m.Password, new { @class = "form-control form-control-lg", placeholder = "Enter a valid password" })*@
+                                        @*<label class="form-label" for="form3Example3">password</label>*@
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                                 </div>
-                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
-                                <label class="form-check-label" for="form2Example3">Remember me</label>
                             </div>
 
-                        </div>
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
+                                    <label class="form-check-label" for="form2Example3">Remember me</label>
+                                </div>
 
-                        <div class="text-center text-lg-start mt-4 pt-2">
-                            <button type="submit" class="btn btn-primary btn-lg"
-                                    style="padding-left: 2.5rem; padding-right: 2.5rem;">
-                                Login
-                            </button>
-                        </div>
+                            </div>
+
+                            <div class="text-center text-lg-start mt-4 pt-2">
+                                <button type="submit" class="btn btn-primary btn-lg"
+                                        style="padding-left: 2.5rem; padding-right: 2.5rem;">
+                                    Login
+                                </button>
+                            </div>
 
 
-                         }
+                        }
 
                     </div>
 
@@ -73,6 +80,44 @@
     </div>
 
 </section>
+<script type="text/javascript">
+    (function (global) {
+        if (typeof (global) === "undefined") {
+            throw new Error("window is undefined");
+        }
+
+        var _hash = "!";
+        var noBackPlease = function () {
+            global.location.href += "#";
+
+            // Making sure we have the fruit available for juice (^__^)
+            global.setTimeout(function () {
+                global.location.href += "!";
+            }, 50);
+        };
+
+        global.onhashchange = function () {
+            if (global.location.hash !== _hash) {
+                global.location.hash = _hash;
+            }
+        };
+
+        global.onload = function () {
+            noBackPlease();
+
+            // Disables backspace on page except on input fields and textarea..
+            document.body.onkeydown = function (e) {
+                var elm = e.target.nodeName.toLowerCase();
+                if (e.which === 8 && (elm !== 'input' && elm !== 'textarea')) {
+                    e.preventDefault();
+                }
+                // Stopping the event bubbling up the DOM tree...
+                e.stopPropagation();
+            };
+        };
+    })(window);
+</script>
+
 
 
 

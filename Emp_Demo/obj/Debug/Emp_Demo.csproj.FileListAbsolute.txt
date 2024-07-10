@@ -56,6 +56,7 @@ C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\EntityFramework.SqlServer.dll
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\Microsoft.Web.Infrastructure.dll
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\Newtonsoft.Json.dll
+C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\NLog.dll
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\System.Web.Helpers.dll
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\System.Web.Mvc.dll
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\System.Web.Optimization.dll
@@ -68,6 +69,7 @@ C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\Antlr3.Runtime.pdb
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\EntityFramework.xml
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\EntityFramework.SqlServer.xml
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\Newtonsoft.Json.xml
+C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\NLog.xml
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\System.Web.Optimization.xml
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\System.Web.Razor.xml
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\System.Web.Webpages.xml
@@ -81,5 +83,3 @@ C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\obj\Debug\Emp_Demo.csproj.CopyComp
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\obj\Debug\Emp_Demo.dll
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\obj\Debug\Emp_Demo.pdb
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\obj\Debug\Emp_Demo.csproj.AssemblyReference.cache
-C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\NLog.dll
-C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\NLog.xml

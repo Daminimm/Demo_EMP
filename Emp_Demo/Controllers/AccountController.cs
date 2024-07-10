@@ -9,11 +9,12 @@ using System.Web.Security;
 
 namespace Emp_Demo.Controllers
 {
-  
+
+    [RoutePrefix("Account")]
     public class AccountController : Controller
     {
         [HttpGet]
-      
+     
         public ActionResult Login()
         {
             return View();
@@ -35,7 +36,7 @@ namespace Emp_Demo.Controllers
 
                     if (user.Role == "Admin")
                     {
-                        return RedirectToAction("AdminDashboard", "Admin");
+                        return RedirectToAction("AdminDashboard","Admin");
                     }
                     else if (user.Role == "Employee")
                     {
@@ -49,7 +50,7 @@ namespace Emp_Demo.Controllers
             return View(MODEL);
         }
         [HttpGet]
-        [Route("logout")]
+        [Route("Logout")]
         public ActionResult Logout()
         {
             
@@ -61,7 +62,7 @@ namespace Emp_Demo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("logout")]
+        [Route("Logout")]
         public ActionResult LogoutPost()
         {
             FormsAuthentication.SignOut();

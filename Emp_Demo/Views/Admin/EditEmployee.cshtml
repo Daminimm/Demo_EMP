@@ -9,29 +9,43 @@
         content: " *";
         color: red;
     }
-    .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+
+    form-group {
         margin-top: 15px;
         margin-bottom: .5rem;
         margin-left: 0;
     }
+
+    .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-top: 1rem !important;
+    }
+
     body {
         margin: inherit;
     }
 </style>
 
-<h2>EditEmployee</h2>
+<nav class="navbar navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        @*<a class="navbar-brand" href="#">Employee Management System</a>*@
+
+        <a class="navbar-brand mr-auto"> Edit Employee Information  </a>
+    </div>
+</nav>
 
 @using (Html.BeginForm("EditEmployee", "Admin", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
-     <div class="form-group">
-    
+    <div class="form-group">
+
         @Html.LabelFor(Model => Model.EmployeeName, "Employee Name", htmlAttributes: new { @class = "control-label col-md-2 required" })
         @Html.TextBoxFor(model => model.EmployeeName, new { @class = "form-control" })
         @Html.ValidationMessageFor(Model => Model.EmployeeName, "", new { @class = "text-danger" })
 
-     </div>
+    </div>
     <div class="form-group">
         @Html.LabelFor(Model => Model.Email, "Email", htmlAttributes: new { @class = "control-label col-md-2 required" })
         @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
@@ -56,10 +70,10 @@
         @Html.LabelFor(Model => Model.Department, "Department", htmlAttributes: new { @class = "control-label col-md-2 required" })
         @Html.DropDownListFor(Model => Model.Department, new SelectList(new List<string> { "Technical", "Non-Technical" }), "Choose...", htmlAttributes: new { @class = "form-select" })
         @*<select class="form-select" id="Department" name="Department">
-            <option selected>Choose...</option>
-            <option value="Technical">Technical</option>
-            <option value="Non-Technical">Non-Technical</option>
-        </select>*@
+                <option selected>Choose...</option>
+                <option value="Technical">Technical</option>
+                <option value="Non-Technical">Non-Technical</option>
+            </select>*@
         @*@Html.TextBoxFor(model => model.Department, new { @class = "form-control" })*@
         @Html.ValidationMessageFor(Model => Model.Department, "", new { @class = "text-danger" })
     </div>
@@ -79,19 +93,23 @@
         @Html.ValidationMessageFor(Model => Model.Userlogin.Role, "", new { @class = "text-danger" })
 
         @*@Html.LabelFor(Model => Model.Userlogin.Role, "Role", htmlAttributes: new { @class = "control-label col-md-2 required" })
-        <select class="form-select" id="Userlogin_Role" name="Userlogin.Role">
-        <option selected>Choose...</option>
-        <option value="Admin" @(Model.Userlogin.Role == "Admin" ? "selected" : "")>Admin</option>
-        <option value="Employee" @(Model.Userlogin.Role == "Employee" ? "selected" : "")>Employee</option>
-        </select>*@
+            <select class="form-select" id="Userlogin_Role" name="Userlogin.Role">
+            <option selected>Choose...</option>
+            <option value="Admin" @(Model.Userlogin.Role == "Admin" ? "selected" : "")>Admin</option>
+            <option value="Employee" @(Model.Userlogin.Role == "Employee" ? "selected" : "")>Employee</option>
+            </select>*@
         @*@Html.TextBoxFor(model => model.Userlogin.Role, new { @class = "form-control" })*@
         <!--@Html.ValidationMessageFor(Model => Model.Userlogin.Role, "", new { @class = "text-danger" })-->
     </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-        @Html.ActionLink("Back to List", "EmployeeList")
+    <button type="submit" class="btn btn-primary">Submit</button>
+    @*@Html.ActionLink("Back to List", "EmployeeList")*@
+    <button type="button" class="btn btn-dark">
+        @Html.ActionLink("Back to List", "EmployeeList", null, new { @style = "color: white;" })
+    </button>
 
 
- }
+
+}
 
 
 
