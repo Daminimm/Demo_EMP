@@ -11,11 +11,23 @@
     @Scripts.Render("~/bundles/jquery")
 
     @Scripts.Render("~/Content/css")
-
+   @*@if (User.Identity.IsAuthenticated)
+    {
+       @Html.ActionLink("AdminDashboard", "Admin")
+       @Html.ActionLink("EmployeeDashbord", "Employee")      
+                <a>Hello - @User.Identity.Name</a>
+      @Html.ActionLink("LogoutPost", "Account")
+    }
+   else
+   {
+      @Html.ActionLink("Login", "Account")
+   }*@
+          
 </head>
 
 <body>
 
+  
 
     <div class="container body-content">
         @RenderBody()

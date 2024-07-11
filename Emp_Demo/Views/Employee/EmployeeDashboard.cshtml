@@ -4,8 +4,7 @@
 
     Layout = "~/Views/Shared/_Layout.cshtml";
     string employeeName = ViewBag.EmployeeName;
-    var successMessage = ViewBag.SuccessMessage as string;
-    var errorMessage = ViewBag.ErrorMessage as string;
+  
 }
 
 
@@ -13,26 +12,15 @@
     label {
         display: inline;
     }
+
     hr {
         margin: 0;
-        color: 0;;
         border: 0;
         border-top: 0;
         opacity: 0;
+    }
 </style>
-@*@if (!string.IsNullOrEmpty(successMessage))
-     {
-       <div class="alert alert-success">
-        @successMessage
-       </div>
-     }
 
-    @if (!string.IsNullOrEmpty(errorMessage))
-     {
-       <div class="alert alert-danger">
-        @errorMessage
-       </div>
-     }*@
 
 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
@@ -66,76 +54,62 @@
 
 
 </nav>
-<div class="container" style="margin-top: 80px;">
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["SuccessMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
 
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @TempData["ErrorMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-</div>
+@Html.Partial("PunchInOut", Model)
+
 
 @*<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         PunchInOut
     </button>*@
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+@*<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
 
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Attendance Entry</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                @using (Html.BeginForm("PunchInOut", "Employee", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                 {
-                    @Html.AntiForgeryToken()
-                    @Html.HiddenFor(m => m.EmployeeId)
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Employeeinfo.EmployeeName, "Employee Name :", new { @class = "control-label col-md-2" })
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Attendance Entry</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @using (Html.BeginForm("PunchInOut", "Employee", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                     {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.EmployeeId)
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Employeeinfo.EmployeeName, "Employee Name :", new { @class = "control-label col-md-2" })
 
-                        @employeeName
+                            @employeeName
 
-                    </div>
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.EntryType, "Entry Type", new { @class = "col-md-2 col-form-label" })
-                        <div class="col-md-10">
-                            <div class="form-check">
-                                @Html.RadioButtonFor(model => model.EntryType, "PunchIn", new { @class = "form-check-input", id = "punchIn" })
-                                <label class="form-check-label" for="punchIn">
-                                    Punch In
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                @Html.RadioButtonFor(model => model.EntryType, "PunchOut", new { @class = "form-check-input", id = "punchOut" })
-                                <label class="form-check-label" for="punchOut">
-                                    Punch Out
-                                </label>
+                        </div>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.EntryType, "Entry Type", new { @class = "col-md-2 col-form-label" })
+                            <div class="col-md-10">
+                                <div class="form-check">
+                                    @Html.RadioButtonFor(model => model.EntryType, "PunchIn", new { @class = "form-check-input", id = "punchIn" })
+                                    <label class="form-check-label" for="punchIn">
+                                        Punch In
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    @Html.RadioButtonFor(model => model.EntryType, "PunchOut", new { @class = "form-check-input", id = "punchOut" })
+                                    <label class="form-check-label" for="punchOut">
+                                        Punch Out
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Submit" class="btn btn-primary" />
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Submit" class="btn btn-primary" />
+                            </div>
                         </div>
-                    </div>
 
 
-                 }
+                     }
+                </div>
+
             </div>
-
         </div>
-    </div>
-</div>
+    </div>*@
 
 
 @*<nav class="navbar navbar-dark bg-dark fixed-top">

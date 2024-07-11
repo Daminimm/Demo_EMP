@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using Emp_Demo.Models;
 
 namespace Emp_Demo.Controllers
 {
- 
+    [Authorize(Roles = "Admin")]
     [RoutePrefix("Admin")]
     public class AdminController : Controller
     {
@@ -38,9 +39,16 @@ namespace Emp_Demo.Controllers
         [Route("AddEmployee")]
         public ActionResult AddEmployee()
         {
+            var departments = new List<SelectListItem>
+        {
+            new SelectListItem { Value = "Technical", Text = "Technical" },
+            new SelectListItem { Value = "Non-Technical", Text = "Non-Technical" }
+          
+        };
+
+            ViewBag.Departments = new SelectList(departments, "Value", "Text");
+
             return View();
-
-
         }
    
         [HttpPost]
@@ -52,6 +60,13 @@ namespace Emp_Demo.Controllers
             {
                 using (var DbContext = new Demo_EmployeeManagementEntities())
                 {
+                    var departments = new List<SelectListItem>
+                    {
+                      new SelectListItem { Value = "Technical", Text = "Technical" },
+                      new SelectListItem { Value = "Non-Technical", Text = "Non-Technical" }
+           
+                    };
+                    ViewBag.Departments = new SelectList(departments, "Value", "Text");
 
 
                     if (ModelState.IsValid)
@@ -97,7 +112,14 @@ namespace Emp_Demo.Controllers
         [Route("EditEmployee/{id}")]
         public ActionResult EditEmployee(int id)
         {
-            var employee = DbContext.Employeeinfoes.Where(x => x.EmployeeId == id).FirstOrDefault();
+             var employee = DbContext.Employeeinfoes.Where(x => x.EmployeeId == id).FirstOrDefault();
+             var departments = new List<SelectListItem>
+             {
+               new SelectListItem { Value = "Technical", Text = "Technical" },
+              new SelectListItem { Value = "Non-Technical", Text = "Non-Technical" }
+        
+             };
+            ViewBag.Departments = new SelectList(departments, "Value", "Text", employee.Department);
             return View(employee);
         }
         [HttpPost]
@@ -105,6 +127,13 @@ namespace Emp_Demo.Controllers
         public ActionResult EditEmployee(Employeeinfo model, int id)
         {
             var employee = DbContext.Employeeinfoes.Where(x => x.EmployeeId == id).FirstOrDefault();
+            var departments = new List<SelectListItem>
+            {
+               new SelectListItem { Value = "Technical", Text = "Technical" },
+               new SelectListItem { Value = "Non-Technical", Text = "Non-Technical" }
+
+            };
+            ViewBag.Departments = new SelectList(departments, "Value", "Text", employee.Department);
             if (employee != null)
             {
                 employee.EmployeeName = model.EmployeeName;
@@ -170,6 +199,7 @@ namespace Emp_Demo.Controllers
         [Route("AttendanceReport")]
         public ActionResult AttendanceReport(int employeeId)
         {
+           
             return RedirectToAction("AttendanceReport", new { employeeId = employeeId });
         }
 
@@ -212,7 +242,7 @@ namespace Emp_Demo.Controllers
                     DbContext.SaveChanges();
 
                     return Json(new { success = true, employeeId = model.EmployeeId });
-                    //return RedirectToAction("AttendanceReport", new { employeeId = model.EmployeeId });
+                  
                 }
             }
             catch (Exception)
@@ -221,20 +251,37 @@ namespace Emp_Demo.Controllers
             }
 
 
-            return View(model);
+            return View("attendance");
         }
         [HttpGet]
+       
         [Route("DeleteAttendance/{id}")]
-        public ActionResult DeleteAttendance(int? Id)
+        public ActionResult DeleteAttendance(int id)
         {
+            try
+            {
+                var attendance = DbContext.Attendances.Find(id);
+                if (attendance == null)
+                {
+                    return HttpNotFound();
+                }
 
-            var attendance = DbContext.Attendances.Where(x => x.AttendanceId == Id).FirstOrDefault();
-            DbContext.Attendances.Remove(attendance);
-            TempData["message"] = "Attendance  Deleted Successfully";
-            DbContext.SaveChanges();
+                DbContext.Attendances.Remove(attendance);
+                TempData["message"] = "Attendance Deleted Successfully";
+                DbContext.SaveChanges();
+            
+                return Json(new { success = true, employeeId = attendance.EmployeeId },JsonRequestBehavior.AllowGet);
+              
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("", "An error occurred while processing your request.");
+            }
 
-            return RedirectToAction("AttendanceReport");
+            return View();
         }
+
+       
 
 
     }

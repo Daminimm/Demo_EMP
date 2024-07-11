@@ -1,13 +1,14 @@
 ﻿@model Emp_Demo.Models.Userlogin
 @{
     ViewBag.Title = "Login";
+  
 
 }
-<script type="text/javascript">
+@*<script type="text/javascript">
     function preventBack() { window.history.forward(); }
     setTimeout("preventBack()", 0);
     window.onunload = function () { null };
-</script>
+</script>*@
 
 <style>
     body {
@@ -32,7 +33,7 @@
                         {
                             @Html.AntiForgeryToken()
                             <div class="form-group">
-                                @Html.LabelFor(m => m.Username, new { @class = "control-label col-md-2" })
+                                @Html.LabelFor(m => m.Username, "User Name ",new { @class = "control-label col-md-3" })
                                 <div class="col-md-10">
                                     <div data-mdb-input-init class="form-outline mb-4">
                                         @Html.TextBoxFor(m => m.Username, new { @class = "form-control form-control-lg", placeholder = "Enter a valid user name" })
@@ -42,7 +43,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.LabelFor(m => m.Password, new { @class = "control-label col-md-2" })
+                                @Html.LabelFor(m => m.Password, new { @class = "control-label col-md-3" })
                                 <div class="col-md-10">
                                     <div data-mdb-input-init class="form-outline mb-4">
                                         @Html.PasswordFor(m => m.Password, new { @class = "form-control form-control-lg", placeholder = "Enter a valid password" })
@@ -53,13 +54,13 @@
                                 </div>
                             </div>
 
-                            <div class="d-flex justify-content-between align-items-center mb-4">
+                            @*<div class="d-flex justify-content-between align-items-center mb-4">
                                 <div class="form-check">
                                     <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
                                     <label class="form-check-label" for="form2Example3">Remember me</label>
                                 </div>
 
-                            </div>
+                            </div>*@
 
                             <div class="text-center text-lg-start mt-4 pt-2">
                                 <button type="submit" class="btn btn-primary btn-lg"
@@ -69,7 +70,7 @@
                             </div>
 
 
-                        }
+                         }
 
                     </div>
 
@@ -80,43 +81,7 @@
     </div>
 
 </section>
-<script type="text/javascript">
-    (function (global) {
-        if (typeof (global) === "undefined") {
-            throw new Error("window is undefined");
-        }
 
-        var _hash = "!";
-        var noBackPlease = function () {
-            global.location.href += "#";
-
-            // Making sure we have the fruit available for juice (^__^)
-            global.setTimeout(function () {
-                global.location.href += "!";
-            }, 50);
-        };
-
-        global.onhashchange = function () {
-            if (global.location.hash !== _hash) {
-                global.location.hash = _hash;
-            }
-        };
-
-        global.onload = function () {
-            noBackPlease();
-
-            // Disables backspace on page except on input fields and textarea..
-            document.body.onkeydown = function (e) {
-                var elm = e.target.nodeName.toLowerCase();
-                if (e.which === 8 && (elm !== 'input' && elm !== 'textarea')) {
-                    e.preventDefault();
-                }
-                // Stopping the event bubbling up the DOM tree...
-                e.stopPropagation();
-            };
-        };
-    })(window);
-</script>
 
 
 

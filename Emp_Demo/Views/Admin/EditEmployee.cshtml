@@ -1,4 +1,4 @@
-﻿@model Emp_Demo.Models.Employeeinfo
+﻿@model  Emp_Demo.Models.Employeeinfo
 @{
     ViewBag.Title = "EditEmployee";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -68,13 +68,8 @@
     </div>
     <div class="form-group">
         @Html.LabelFor(Model => Model.Department, "Department", htmlAttributes: new { @class = "control-label col-md-2 required" })
-        @Html.DropDownListFor(Model => Model.Department, new SelectList(new List<string> { "Technical", "Non-Technical" }), "Choose...", htmlAttributes: new { @class = "form-select" })
-        @*<select class="form-select" id="Department" name="Department">
-                <option selected>Choose...</option>
-                <option value="Technical">Technical</option>
-                <option value="Non-Technical">Non-Technical</option>
-            </select>*@
-        @*@Html.TextBoxFor(model => model.Department, new { @class = "form-control" })*@
+        @Html.DropDownList("Department", ViewBag.Departments as SelectList, new { @class = "form-control" })
+
         @Html.ValidationMessageFor(Model => Model.Department, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
@@ -89,27 +84,30 @@
     </div>
     <div class="form-group">
         @Html.LabelFor(Model => Model.Userlogin.Role, "Role", htmlAttributes: new { @class = "control-label col-md-2 required" })
-        @Html.DropDownListFor(Model => Model.Userlogin.Role, new SelectList(new List<string> { "Admin", "Employee" }), "Choose...", htmlAttributes: new { @class = "form-select" })
+        @Html.DropDownListFor(Model => Model.Userlogin.Role, new SelectList(new List<string> { "Admin", "Employee" }), htmlAttributes: new { @class = "form-select" })
         @Html.ValidationMessageFor(Model => Model.Userlogin.Role, "", new { @class = "text-danger" })
-
-        @*@Html.LabelFor(Model => Model.Userlogin.Role, "Role", htmlAttributes: new { @class = "control-label col-md-2 required" })
-            <select class="form-select" id="Userlogin_Role" name="Userlogin.Role">
-            <option selected>Choose...</option>
-            <option value="Admin" @(Model.Userlogin.Role == "Admin" ? "selected" : "")>Admin</option>
-            <option value="Employee" @(Model.Userlogin.Role == "Employee" ? "selected" : "")>Employee</option>
-            </select>*@
-        @*@Html.TextBoxFor(model => model.Userlogin.Role, new { @class = "form-control" })*@
-        <!--@Html.ValidationMessageFor(Model => Model.Userlogin.Role, "", new { @class = "text-danger" })-->
     </div>
+    <!--<div class="form-group">
+        <label asp-for="NewEmployeeImage" class="control-label">Employee Image </label>
+        <input asp-for="NewEmployeeImage" type="file" class="form-control" />
+        <span asp-validation-for="NewEmployeeImage" class="text-danger"></span>
+    </div>
+    <div class="form-group">-->
+        @*<img src="data:image;base64,@(Model.EmployeeImage != null ? Convert.ToBase64String(Model.EmployeeImage) : "")" alt="Employee Image" style="max-width: 200px;" />*@
+    <!--</div>-->
     <button type="submit" class="btn btn-primary">Submit</button>
-    @*@Html.ActionLink("Back to List", "EmployeeList")*@
+
     <button type="button" class="btn btn-dark">
         @Html.ActionLink("Back to List", "EmployeeList", null, new { @style = "color: white;" })
     </button>
 
 
 
-}
+
+
+
+
+ }
 
 
 

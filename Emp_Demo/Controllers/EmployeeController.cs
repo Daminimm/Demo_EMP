@@ -10,24 +10,16 @@ using System.Data.Entity;
 
 namespace Emp_Demo.Controllers
 {
-
+    [Authorize(Roles = "Employee")]
+    [RoutePrefix("Employee")]
     public class EmployeeController : BaseController
     {
     
         Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
 
         [HttpGet]
-        public ActionResult EmployeeDashboard()
+        public ActionResult EmployeeDashboard( )
         {
-            if (TempData["SuccessMessage"] != null)
-            {
-                ViewBag.SuccessMessage = TempData["SuccessMessage"] as string;
-            }
-            else
-            {
-                ViewBag.ErrorMessage = TempData["ErrorMessage"] as string;
-            }
-
             int userId = GetLoggedInUserId();
             var employee = DbContext.Employeeinfoes.FirstOrDefault(e => e.Userlogin.UserId == userId);
             if (employee != null)
