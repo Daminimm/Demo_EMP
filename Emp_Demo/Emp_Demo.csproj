@@ -194,6 +194,7 @@
     <Content Include="Scripts\jquery-2.0.0.min.js" />
     <Content Include="Scripts\jquery-ui-1.13.2.js" />
     <Content Include="Scripts\jquery-ui-1.13.2.min.js" />
+    <Content Include="System.Linq.Dynamic.dll" />
     <Content Include="Web.config" />
     <Content Include="Views\Employee\AttendanceReport.cshtml" />
   </ItemGroup>
@@ -204,7 +205,12 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
+    <Compile Include="CustomValidation\CustomContactValidationAttribute .cs" />
+    <Compile Include="CustomValidation\CustomEmailFormatAttribute .cs" />
+    <Compile Include="CustomValidation\CustomEmployeeNameFormatAttribute .cs" />
     <Compile Include="CustomValidation\CustomPasswordAttribute .cs" />
+    <Compile Include="CustomValidation\CustomUsernameValidationAttribute .cs" />
+    <Compile Include="CustomValidation\EmployeeRoleValidationAttribute .cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

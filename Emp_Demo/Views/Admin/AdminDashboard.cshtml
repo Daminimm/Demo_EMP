@@ -63,7 +63,7 @@
 
 <nav class="navbar navbar-dark bg-dark fixed-top">
     <div class="container-fluid">
-        @*<a class="navbar-brand" href="#">Employee Management System</a>*@
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -71,50 +71,53 @@
         @using (Html.BeginForm("LogoutPost", "Account", FormMethod.Post, new { @class = "form-inline" }))
         {
             @Html.AntiForgeryToken()
-            @*<button type="submit" class="btn btn-danger">Logout</button>*@
+
             <button type="submit" class="btn btn-outline-danger my-2 my-sm-0">Logout</button>
         }
     </div>
 </nav>
-<div class="container-fluid">
-    <div class="vertical-nav collapse" id="navbarToggleExternalContent">
-        <div class="bg-dark p-4">
-            <ul class="nav flex-column">
 
-                <li class="nav-item">
-                    <a class="nav-link" href="@Url.Action("AdminDashboard", "Admin")">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#employeeManagementMenu" role="button" aria-expanded="false" aria-controls="employeeManagementMenu">
-                        Employee Management
-                    </a>
-                    <div class="collapse" id="employeeManagementMenu">
-                        <ul class="nav flex-column ml-3">
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("AddEmployee", "Admin")">Add Employee</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("EmployeeList", "Admin")">Employee List</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#attendanceManagementMenu" role="button" aria-expanded="false" aria-controls="attendanceManagementMenu">
-                        Attendance Management
-                    </a>
-                    <div class="collapse" id="attendanceManagementMenu">
-                        <ul class="nav flex-column ml-3">
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("AttendanceReport", "Admin")">Attendance Record</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
+    <div class="container-fluid">
+        <div class="vertical-nav collapse" id="navbarToggleExternalContent">
+            <div class="bg-dark p-4">
+                <ul class="nav flex-column">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("AdminDashboard", "Admin")">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#employeeManagementMenu" role="button" aria-expanded="false" aria-controls="employeeManagementMenu">
+                            Employee Management
+                        </a>
+                        <div class="collapse" id="employeeManagementMenu">
+                            <ul class="nav flex-column ml-3">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("AddEmployee", "Admin")">Add Employee</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("EmployeeList", "Admin")">Employee List</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#attendanceManagementMenu" role="button" aria-expanded="false" aria-controls="attendanceManagementMenu">
+                            Attendance Management
+                        </a>
+                        <div class="collapse" id="attendanceManagementMenu">
+                            <ul class="nav flex-column ml-3">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("AttendanceReport", "Admin")">Attendance Record</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
-</div>
+
+
 
 
 

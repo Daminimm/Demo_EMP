@@ -10,7 +10,7 @@ using System.Data.Entity;
 
 namespace Emp_Demo.Controllers
 {
-    [Authorize(Roles = "Employee")]
+
     [RoutePrefix("Employee")]
     public class EmployeeController : BaseController
     {
@@ -28,12 +28,9 @@ namespace Emp_Demo.Controllers
                 var lastAttendance = attendances.OrderByDescending(a => a.AttendanceDate).FirstOrDefault();
                 ViewBag.EmployeeName = employee.EmployeeName;
 
-                //Attendances = attendances
                 var model = new AttendanceViewModel
                 {
-                    //EmployeeId = employee.EmployeeId,
-                    ////AttendanceDate = DateTime.Today,
-                    ////Timestamp = DateTime.Now,
+                    
 
                     Attendances = attendances
 
@@ -115,14 +112,14 @@ namespace Emp_Demo.Controllers
                             }
                             else if (lastPunch == null || lastPunch.EntryType == EntryTypeEnum.PunchOut.ToString())
                             {
-                                TempData["ErrorMessage"] = "You haven't punched in today or you have already punched out.";
+                                TempData["ErrorMessage"] = " you have already punched out.";
                             }
                         }
 
                         return RedirectToAction("EmployeeDashboard");
                     }
 
-                    TempData["ErrorMessage"] = "User not found.";
+
                 }
                 catch (Exception)
                 {
@@ -149,10 +146,7 @@ namespace Emp_Demo.Controllers
             var lastAttendance = attendances.OrderByDescending(a => a.Timestamp).FirstOrDefault();
             ViewBag.EmployeeName = employee.EmployeeName;
             return View(attendances);
-            //int userId = GetLoggedInUserId();
            
-            //var attendances = DbContext.Attendances.Where(a => a.EmployeeId == ).ToList();
-            //return View(attendances);
         }
 
 

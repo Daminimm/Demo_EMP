@@ -21,19 +21,19 @@ namespace Emp_Demo.CustomValidation
             {
                 string password = value.ToString();
 
-                // Check minimum length
+    
                 if (password.Length < _minLength)
                 {
                     return new ValidationResult($"The password must be at least {_minLength} characters long.");
                 }
 
-                // Check for at least one digit
+        
                 if (!password.Any(char.IsDigit))
                 {
                     return new ValidationResult("The password must contain at least one digit.");
                 }
 
-                // Check for at least one special character
+            
                 if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
                 {
                     return new ValidationResult("The password must contain at least one special character.");

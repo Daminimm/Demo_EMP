@@ -15,11 +15,10 @@ namespace Emp_Demo.Models
 
         public int AttendanceId { get; set; }
 
-        //[DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "AttendanceDate is required")]
         public System.DateTime AttendanceDate { get; set; }
 
-        //[DisplayFormat(DataFormatString = "{0:HH:mm:ss}", ApplyFormatInEditMode = true)]
+   
         [Required(ErrorMessage = "Timestamp is required")]
         public System.DateTime Timestamp { get; set; }
         [Required(ErrorMessage = " EntryType is required")]

@@ -9,7 +9,7 @@ using System.Web.Security;
 
 namespace Emp_Demo.Controllers
 {
-
+  
     [RoutePrefix("Account")]
     public class AccountController : Controller
     {
@@ -53,7 +53,7 @@ namespace Emp_Demo.Controllers
         [Route("Logout")]
         public ActionResult Logout()
         {
-            
+            FormsAuthentication.SignOut();
             Session.Clear();
 
             
