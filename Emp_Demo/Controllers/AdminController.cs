@@ -4,6 +4,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using Emp_Demo.Enums;
 using Emp_Demo.Models;
 using Newtonsoft.Json;
 
@@ -68,11 +69,11 @@ namespace Emp_Demo.Controllers
             {
                 using (var DbContext = new Demo_EmployeeManagementEntities())
                 {
-                    var departments = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "Technical", Text = "Technical" },
-                new SelectListItem { Value = "Non-Technical", Text = "Non-Technical" }
-            };
+                   var departments = new List<SelectListItem>
+                   {
+                      new SelectListItem { Value = "Technical", Text = "Technical" },
+                      new SelectListItem { Value = "Non-Technical", Text = "Non-Technical" }
+                   };
                     ViewBag.Departments = new SelectList(departments, "Value", "Text");
 
                    
@@ -254,25 +255,23 @@ namespace Emp_Demo.Controllers
         [Route("DeleteEmployee")]
         public ActionResult DeleteEmployee(int? id)
         {
-            //if (id == null)
-            //{
-            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            //}
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
 
             var employee = DbContext.Employeeinfoes.Where(x => x.EmployeeId == id).FirstOrDefault();
             if (employee == null)
             {
                 return HttpNotFound();
             }
+            var attendances = DbContext.Attendances.Where(a => a.EmployeeId == id).ToList();
 
-            
-            //var attendances = DbContext.Attendances.Where(a => a.EmployeeId == id).ToList();
 
-        
-            //foreach (var attendance in attendances)
-            //{
-            //    DbContext.Attendances.Remove(attendance);
-            //}
+            foreach (var attendance in attendances)
+            {
+                DbContext.Attendances.Remove(attendance);
+            }
             DbContext.Employeeinfoes.Remove(employee);
             DbContext.SaveChanges();
             TempData["message"] = "Employee Deleted Successfully";
@@ -332,13 +331,18 @@ namespace Emp_Demo.Controllers
         {
 
             var attendance = DbContext.Attendances.Where(x => x.AttendanceId == id).FirstOrDefault();
-        
+
             if (attendance == null)
             {
                 return HttpNotFound();
             }
+
+
             return View(attendance);
+
         }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("EditAttendance/{id}")]
@@ -349,23 +353,69 @@ namespace Emp_Demo.Controllers
                 if (ModelState.IsValid)
                 {
                     var attendance = DbContext.Attendances.Find(model.AttendanceId);
-       
+               
 
                     if (attendance == null)
                     {
                         return HttpNotFound();
                     }
+                    
+                    if (model.EntryType == "PunchIn")
+                    {
+                   
+                        var punchOutAttendance = DbContext.Attendances
+                            .Where(a => a.EmployeeId == model.EmployeeId &&
+                                        a.EntryType == EntryTypeEnum.PunchOut.ToString() &&
+                                        a.AttendanceDate == model.AttendanceDate)
+                            .FirstOrDefault();
 
+                        if (punchOutAttendance != null)
+                        {
+                        
+                            if (model.Timestamp >= punchOutAttendance.Timestamp)
+                            {
+                           
+                                ModelState.AddModelError("Timestamp", "Timestamp  time  should be greater than punch out time .");
+                                return View(model);
 
-                    attendance.EmployeeId = model.EmployeeId;
-                    attendance.AttendanceDate = model.AttendanceDate;
+                            }
+                           
+                        }
+                       
+                    }
+                   
+                    else if (model.EntryType == "PunchOut")
+                    {
+                        
+                        var punchInAttendance = DbContext.Attendances
+                            .Where(a => a.EmployeeId == model.EmployeeId &&
+                                        a.EntryType == EntryTypeEnum.PunchIn.ToString() &&
+                                        a.AttendanceDate == model.AttendanceDate)
+                            .FirstOrDefault();
+
+                        if (punchInAttendance != null)
+                        {
+                            
+                            if (attendance.Timestamp <= punchInAttendance.Timestamp)
+                            {
+                                ModelState.AddModelError("Timestamp", "Timestamp  time  should be less than punch out time .");
+                                return View(model);
+                            }
+                        }
+                    }
+
                     attendance.Timestamp = model.Timestamp;
-                    attendance.EntryType = model.EntryType;
+                    attendance.EntryType = model.EntryType.ToString();
+
+
+                    //attendance.EmployeeId = model.EmployeeId;
+                    //attendance.AttendanceDate = model.AttendanceDate;
+
                     TempData["message"] = "Attendance  Updated Successfully";
                     DbContext.SaveChanges();
 
                     return Json(new { success = true, employeeId = model.EmployeeId });
-                  
+
                 }
             }
             catch (Exception)
@@ -374,7 +424,7 @@ namespace Emp_Demo.Controllers
             }
 
 
-            return View("attendance");
+            return View(model);
         }
         [HttpGet]
        

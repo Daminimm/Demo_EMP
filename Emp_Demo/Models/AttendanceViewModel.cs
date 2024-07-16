@@ -23,6 +23,7 @@ namespace Emp_Demo.Models
         public System.DateTime Timestamp { get; set; }
         [Required(ErrorMessage = " EntryType is required")]
         public EntryTypeEnum EntryType { get; set; }
+        public string EmployeeName { get; set; }
 
         public virtual Employeeinfo Employeeinfo { get; set; }
         
