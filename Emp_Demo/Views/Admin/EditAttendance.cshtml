@@ -1,71 +1,96 @@
 ﻿@model Emp_Demo.Models.Attendance
-    @using Emp_Demo.Enums;
+@using Emp_Demo.Enums;
 
-    @{
-        ViewBag.Title = "Edit Attendance";
-        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+@{
+    ViewBag.Title = "Edit Attendance";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    form-group {
+        margin-top: 15px;
+        margin-bottom: .5rem;
+        margin-left: 0;
     }
 
-    <style>
-        form-group {
-            margin-top: 15px;
-            margin-bottom: .5rem;
-            margin-left: 0;
-        }
+    .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-top: 1rem !important;
+    }
+</style>
+<nav class="navbar navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
 
-        .container {
-            width: 100% !important;
-            max-width: 100% !important;
-            padding-top: 1rem !important;
-        }
-    </style>
-    <nav class="navbar navbar-dark bg-dark fixed-top">
-        <div class="container-fluid">
-
-            <a class="navbar-brand mr-auto"> Edit Attendance Report </a>
-        </div>
-    </nav>
-
-    <div id="editAttendanceForm">
-        @using (Html.BeginForm("EditAttendance", "Admin", FormMethod.Post, new { id = "attendanceEditForm" }))
-         {
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(model => model.AttendanceId)
-            @Html.HiddenFor(model => model.EmployeeId)
-
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Employeeinfo.EmployeeName)
-                @Html.EditorFor(model => model.Employeeinfo.EmployeeName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                @Html.ValidationMessageFor(model => model.Employeeinfo.EmployeeName, "", new { @class = "text-danger" })
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.AttendanceDate)
-                @Html.TextBoxFor(model => model.AttendanceDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-                @Html.ValidationMessageFor(model => model.AttendanceDate, "", new { @class = "text-danger" })
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.Timestamp)
-                @Html.TextBoxFor(model => model.Timestamp, "{0:HH:mm:ss}", new { @class = "form-control", type = "time" })
-                @Html.ValidationMessageFor(model => model.Timestamp, "", new { @class = "text-danger" })
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.EntryType)
-                @Html.DropDownListFor(model => model.EntryType, new SelectList(Enum.GetValues(typeof(EntryTypeEnum))), "Select", new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.EntryType, "", new { @class = "text-danger" })
-            </div>
-            <button type="button" id="submitEditForm" class="btn btn-primary">Save</button>
-
-            <button type="button" class="btn btn-dark">
-                @Html.ActionLink("Back to Attendance Report", "AttendanceReport", null, new { @style = "color: white;" })
-            </button>
-         }
+        <a class="navbar-brand mr-auto"> Edit Attendance Report </a>
     </div>
-    
+</nav>
+
+<div id="editAttendanceForm">
+    @using (Html.BeginForm("EditAttendance", "Admin", FormMethod.Post, new { id = "attendanceEditForm" }))
+    {
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.AttendanceId)
+        @Html.HiddenFor(model => model.EmployeeId)
 
 
-    @section Scripts {
+        <div class="form-group">
+            @Html.LabelFor(model => model.Employeeinfo.EmployeeName)
+            @Html.EditorFor(model => model.Employeeinfo.EmployeeName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            @Html.ValidationMessageFor(model => model.Employeeinfo.EmployeeName, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.AttendanceDate)
+            @Html.TextBoxFor(model => model.AttendanceDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+            @Html.ValidationMessageFor(model => model.AttendanceDate, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Timestamp)
+            @Html.TextBoxFor(model => model.Timestamp, "{0:HH:mm:ss}", new { @class = "form-control", type = "time" })
+            @Html.ValidationMessageFor(model => model.Timestamp, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.EntryType)
+            @Html.DropDownListFor(model => model.EntryType, new SelectList(Enum.GetValues(typeof(EntryTypeEnum))), "Select", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.EntryType, "", new { @class = "text-danger" })
+        </div>
+        <button type="button" id="submitEditForm" class="btn btn-primary">Save</button>
+
+        <button type="button" class="btn btn-dark">
+            @Html.ActionLink("Back to Attendance Report", "AttendanceReport", null, new { @style = "color: white;" })
+        </button>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#submitEditForm').click(function() {
+                var form = $('#attendanceEditForm');
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            window.location.href = '@Url.Action("AttendanceReport", "Admin")' + '?employeeId=' + response.employeeId;
+                        } else {
+                            var errorMessages = response.errors.join("\n");
+                            alert(response.message + "\n" + errorMessages);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert("An error occurred: " + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+@*@section Scripts {
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
             $(document).ready(function() {
@@ -90,7 +115,7 @@
                 });
             });
         </script>
-    }
+    }*@
 
 
 

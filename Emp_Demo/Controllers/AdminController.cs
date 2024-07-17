@@ -10,8 +10,8 @@ using Newtonsoft.Json;
 
 namespace Emp_Demo.Controllers
 {
-  
- 
+
+
     [RoutePrefix("Admin")]
     public class AdminController : Controller
     {
@@ -20,7 +20,7 @@ namespace Emp_Demo.Controllers
         // GET: Admin
 
         [HttpGet]
-    
+
         [Route("AdminDashboard")]
         public ActionResult AdminDashboard()
         {
@@ -31,7 +31,7 @@ namespace Emp_Demo.Controllers
 
         [HttpGet]
         [Route("EmployeeList")]
-        public ActionResult EmployeeList( )
+        public ActionResult EmployeeList()
         {
             if (TempData["message"] != null)
             {
@@ -69,20 +69,20 @@ namespace Emp_Demo.Controllers
             {
                 using (var DbContext = new Demo_EmployeeManagementEntities())
                 {
-                   var departments = new List<SelectListItem>
+                    var departments = new List<SelectListItem>
                    {
                       new SelectListItem { Value = "Technical", Text = "Technical" },
                       new SelectListItem { Value = "Non-Technical", Text = "Non-Technical" }
                    };
                     ViewBag.Departments = new SelectList(departments, "Value", "Text");
 
-                   
+
                     if (DbContext.Userlogins.Any(u => u.Username == model.Username))
                     {
                         ModelState.AddModelError("Username", "Username already exists. Please choose a different one.");
                     }
 
-                 
+
                     if (DbContext.Employeeinfoes.Any(e => e.Email == model.Email))
                     {
                         ModelState.AddModelError("Email", "Email address is already registered.");
@@ -90,7 +90,7 @@ namespace Emp_Demo.Controllers
 
                     if (ModelState.IsValid)
                     {
-                   
+
                         Userlogin userLogin = new Userlogin
                         {
                             Username = model.Username,
@@ -100,7 +100,7 @@ namespace Emp_Demo.Controllers
                         DbContext.Userlogins.Add(userLogin);
                         DbContext.SaveChanges();
 
-                       
+
                         model.UserId = userLogin.UserId;
 
                         Employeeinfo employee = new Employeeinfo
@@ -122,7 +122,7 @@ namespace Emp_Demo.Controllers
                     }
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 ModelState.AddModelError("", "An error occurred while processing your request. Please try again later.");
             }
@@ -208,12 +208,12 @@ namespace Emp_Demo.Controllers
         [Route("EditEmployee/{id}")]
         public ActionResult EditEmployee(int id)
         {
-             var employee = DbContext.Employeeinfoes.Where(x => x.EmployeeId == id).FirstOrDefault();
-             var departments = new List<SelectListItem>
+            var employee = DbContext.Employeeinfoes.Where(x => x.EmployeeId == id).FirstOrDefault();
+            var departments = new List<SelectListItem>
              {
                new SelectListItem { Value = "Technical", Text = "Technical" },
               new SelectListItem { Value = "Non-Technical", Text = "Non-Technical" }
-         
+
              };
             ViewBag.Departments = new SelectList(departments, "Value", "Text", employee.Department);
             return View(employee);
@@ -288,7 +288,7 @@ namespace Emp_Demo.Controllers
         //    TempData["message"] = "Employee Deleted Successfully";
         //    return RedirectToAction("EmployeeList");
         //}
-      
+
         [HttpGet]
         [Route("AttendanceReport")]
         public ActionResult AttendanceReport(int? employeeId)
@@ -321,7 +321,7 @@ namespace Emp_Demo.Controllers
         [Route("AttendanceReport")]
         public ActionResult AttendanceReport(int employeeId)
         {
-           
+
             return RedirectToAction("AttendanceReport", new { employeeId = employeeId });
         }
 
@@ -341,8 +341,6 @@ namespace Emp_Demo.Controllers
             return View(attendance);
 
         }
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("EditAttendance/{id}")]
@@ -353,69 +351,86 @@ namespace Emp_Demo.Controllers
                 if (ModelState.IsValid)
                 {
                     var attendance = DbContext.Attendances.Find(model.AttendanceId);
-               
 
                     if (attendance == null)
                     {
                         return HttpNotFound();
                     }
-                    
+
+                  
+                    TimeSpan currentTime = model.Timestamp.TimeOfDay;
+
                     if (model.EntryType == "PunchIn")
                     {
-                   
                         var punchOutAttendance = DbContext.Attendances
-                            .Where(a => a.EmployeeId == model.EmployeeId &&
-                                        a.EntryType == EntryTypeEnum.PunchOut.ToString() &&
-                                        a.AttendanceDate == model.AttendanceDate)
-                            .FirstOrDefault();
+                            .FirstOrDefault(a => a.EmployeeId == model.EmployeeId &&
+                                                 a.EntryType == EntryTypeEnum.PunchOut.ToString() &&
+                                                 a.AttendanceDate == model.AttendanceDate);
 
                         if (punchOutAttendance != null)
                         {
-                        
-                            if (model.Timestamp >= punchOutAttendance.Timestamp)
-                            {
-                           
-                                ModelState.AddModelError("Timestamp", "Timestamp  time  should be greater than punch out time .");
-                                return View(model);
-
-                            }
-                           
-                        }
-                       
-                    }
+                         
                    
+                            TimeSpan punchOutTime = punchOutAttendance.Timestamp.TimeOfDay;
+
+                      
+                            if (currentTime < punchOutTime)
+                            {
+                                attendance.Timestamp = model.Timestamp;
+                                attendance.EntryType = model.EntryType;
+
+                                TempData["message"] = "Attendance updated successfully.";
+                                DbContext.SaveChanges();
+
+                                return Json(new { success = true, employeeId = model.EmployeeId });
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("Timestamp", "Punch in time should be less than punch out time.");
+                                return View(model);
+                            }
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Timestamp", "No corresponding punch-out record found for this date.");
+                            return View(model);
+                        }
+                    }
                     else if (model.EntryType == "PunchOut")
                     {
-                        
                         var punchInAttendance = DbContext.Attendances
-                            .Where(a => a.EmployeeId == model.EmployeeId &&
-                                        a.EntryType == EntryTypeEnum.PunchIn.ToString() &&
-                                        a.AttendanceDate == model.AttendanceDate)
-                            .FirstOrDefault();
+                            .FirstOrDefault(a => a.EmployeeId == model.EmployeeId &&
+                                                 a.EntryType == EntryTypeEnum.PunchIn.ToString() &&
+                                                 a.AttendanceDate == model.AttendanceDate);
 
                         if (punchInAttendance != null)
                         {
-                            
-                            if (attendance.Timestamp <= punchInAttendance.Timestamp)
+                          
+                            TimeSpan punchInTime = punchInAttendance.Timestamp.TimeOfDay;
+
+                           
+                            if (currentTime > punchInTime)
                             {
-                                ModelState.AddModelError("Timestamp", "Timestamp  time  should be less than punch out time .");
+                                attendance.Timestamp = model.Timestamp; 
+                                attendance.EntryType = model.EntryType;
+
+                                TempData["message"] = "Attendance updated successfully.";
+                                DbContext.SaveChanges();
+
+                                return Json(new { success = true, employeeId = model.EmployeeId });
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("Timestamp", "Punch out time should be greater than punch in time.");
                                 return View(model);
                             }
                         }
+                        else
+                        {
+                            ModelState.AddModelError("Timestamp", "No corresponding punch-in record found for this date.");
+                            return View(model);
+                        }
                     }
-
-                    attendance.Timestamp = model.Timestamp;
-                    attendance.EntryType = model.EntryType.ToString();
-
-
-                    //attendance.EmployeeId = model.EmployeeId;
-                    //attendance.AttendanceDate = model.AttendanceDate;
-
-                    TempData["message"] = "Attendance  Updated Successfully";
-                    DbContext.SaveChanges();
-
-                    return Json(new { success = true, employeeId = model.EmployeeId });
-
                 }
             }
             catch (Exception)
@@ -423,11 +438,280 @@ namespace Emp_Demo.Controllers
                 ModelState.AddModelError("", "An error occurred while processing your request.");
             }
 
-
             return View(model);
         }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Route("EditAttendance/{id}")]
+        //public ActionResult EditAttendance(Attendance model)
+        //{
+        //    try
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            var attendance = DbContext.Attendances.Find(model.AttendanceId);
+
+        //            if (attendance == null)
+        //            {
+        //                return HttpNotFound();
+        //            }
+
+        //            // Set model.Timestamp to current DateTime
+        //            model.Timestamp = DateTime.Now; // Or DateTime.UtcNow for UTC time
+
+        //            if (model.EntryType == "PunchIn")
+        //            {
+        //                var punchOutAttendance = DbContext.Attendances
+        //                    .FirstOrDefault(a => a.EmployeeId == model.EmployeeId &&
+        //                                         a.EntryType == EntryTypeEnum.PunchOut.ToString() &&
+        //                                         a.AttendanceDate == model.AttendanceDate);
+
+        //                if (punchOutAttendance != null)
+        //                {
+        //                    if (model.Timestamp < punchOutAttendance.Timestamp)
+        //                    {
+        //                        attendance.Timestamp = model.Timestamp;
+        //                        attendance.EntryType = model.EntryType;
+
+        //                        TempData["message"] = "Attendance updated successfully.";
+        //                        DbContext.SaveChanges();
+
+        //                        return Json(new { success = true, employeeId = model.EmployeeId });
+        //                    }
+        //                    else
+        //                    {
+        //                        ModelState.AddModelError("Timestamp", "Punch in time should be less than punch out time.");
+        //                        return View(model);
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    ModelState.AddModelError("Timestamp", "No corresponding punch-out record found for this date.");
+        //                    return View(model);
+        //                }
+        //            }
+        //            else if (model.EntryType == "PunchOut")
+        //            {
+        //                var punchInAttendance = DbContext.Attendances
+        //                    .FirstOrDefault(a => a.EmployeeId == model.EmployeeId &&
+        //                                         a.EntryType == EntryTypeEnum.PunchIn.ToString() &&
+        //                                         a.AttendanceDate == model.AttendanceDate);
+
+        //                if (punchInAttendance != null)
+        //                {
+        //                    if (model.Timestamp > punchInAttendance.Timestamp)
+        //                    {
+        //                        attendance.Timestamp = model.Timestamp;
+        //                        attendance.EntryType = model.EntryType;
+
+        //                        TempData["message"] = "Attendance updated successfully.";
+        //                        DbContext.SaveChanges();
+
+        //                        return Json(new { success = true, employeeId = model.EmployeeId });
+        //                    }
+        //                    else
+        //                    {
+        //                        ModelState.AddModelError("Timestamp", "Punch out time should be greater than punch in time.");
+        //                        return View(model);
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    ModelState.AddModelError("Timestamp", "No corresponding punch-in record found for this date.");
+        //                    return View(model);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        ModelState.AddModelError("", "An error occurred while processing your request.");
+        //    }
+
+        //    return View(model);
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Route("EditAttendance/{id}")]
+        //public ActionResult EditAttendance(Attendance model)
+        //{
+        //    try
+        //    {
+        //         if (ModelState.IsValid)
+        //        {
+        //            var attendance = DbContext.Attendances.Find(model.AttendanceId);
+
+        //            if (attendance == null)
+        //            {
+        //                return HttpNotFound();
+        //            }
+
+        //            if (model.EntryType == "PunchIn")
+        //            {
+
+        //                var punchOutAttendance = DbContext.Attendances
+        //                    .FirstOrDefault(a => a.EmployeeId == model.EmployeeId &&
+        //                                         a.EntryType == EntryTypeEnum.PunchOut.ToString() &&
+        //                                         a.AttendanceDate == model.AttendanceDate);
+
+        //                if (punchOutAttendance != null)
+        //                {
+
+        //                    if (model.Timestamp < punchOutAttendance.Timestamp)
+        //                    {
+        //                        attendance.Timestamp = model.Timestamp;
+        //                        attendance.EntryType = model.EntryType;
+
+        //                        TempData["message"] = "Attendance updated successfully.";
+        //                        DbContext.SaveChanges();
+
+        //                        return Json(new { success = true, employeeId = model.EmployeeId });
+        //                    }
+        //                    else
+        //                    {
+        //                        ModelState.AddModelError("Timestamp", "Punch in time should be less than punch out time.");
+        //                        return View(model);
+        //                    }
+        //                }
+        //                else
+        //                {
+
+        //                    ModelState.AddModelError("Timestamp", "No corresponding punch-out record found for this date.");
+        //                    return View(model);
+        //                }
+        //            }
+        //            else if (model.EntryType == "PunchOut")
+        //            {
+
+        //                var punchInAttendance = DbContext.Attendances
+        //                    .FirstOrDefault(a => a.EmployeeId == model.EmployeeId &&
+        //                                         a.EntryType == EntryTypeEnum.PunchIn.ToString() &&
+        //                                         a.AttendanceDate == model.AttendanceDate);
+
+        //                if (punchInAttendance != null)
+        //                {
+
+        //                    if (model.Timestamp > punchInAttendance.Timestamp)
+        //                    {
+        //                        attendance.Timestamp = model.Timestamp;
+        //                        attendance.EntryType = model.EntryType;
+
+        //                        TempData["message"] = "Attendance updated successfully.";
+        //                        DbContext.SaveChanges();
+
+        //                        return Json(new { success = true, employeeId = model.EmployeeId });
+        //                    }
+        //                    else
+        //                    {
+        //                        ModelState.AddModelError("Timestamp", "Punch out time should be greater than punch in time.");
+        //                        return View(model);
+        //                    }
+        //                }
+        //                else
+        //                {
+
+        //                    ModelState.AddModelError("Timestamp", "No corresponding punch-in record found for this date.");
+        //                    return View(model);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        ModelState.AddModelError("", "An error occurred while processing your request.");
+        //    }
+
+        //    return View(model);
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Route("EditAttendance/{id}")]
+        //public ActionResult EditAttendance(Attendance model)
+        //{
+        //    try
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            var attendance = DbContext.Attendances.Find(model.AttendanceId);
+
+
+        //            if (attendance == null)
+        //            {
+        //                return HttpNotFound();
+        //            }
+
+        //            if (model.EntryType == "PunchIn")
+        //            {
+
+        //                var punchOutAttendance = DbContext.Attendances
+        //                    .Where(a => a.EmployeeId == model.EmployeeId &&
+        //                                a.EntryType == EntryTypeEnum.PunchOut.ToString() &&
+        //                                a.AttendanceDate == model.AttendanceDate)
+        //                    .FirstOrDefault();
+
+        //                if (punchOutAttendance != null)
+        //                {
+
+        //                    if (model.Timestamp < punchOutAttendance.Timestamp)
+        //                    {
+
+        //                        ModelState.AddModelError("Timestamp", "Timestamp  time  should be less than punch out time .");
+        //                        return View(model);
+
+        //                    }
+
+        //                }
+
+
+        //            }
+
+        //            else if (model.EntryType == "PunchOut")
+        //            {
+
+        //                var punchInAttendance = DbContext.Attendances
+        //                    .Where(a => a.EmployeeId == model.EmployeeId &&
+        //                                a.EntryType == EntryTypeEnum.PunchIn.ToString() &&
+        //                                a.AttendanceDate == model.AttendanceDate)
+        //                    .FirstOrDefault();
+
+        //                if (punchInAttendance != null)
+        //                {
+
+        //                    if (attendance.Timestamp > punchInAttendance.Timestamp)
+        //                    {
+        //                        ModelState.AddModelError("Timestamp", "Timestamp  time  should be greater than punch in time .");
+        //                        return View(model);
+        //                    }
+        //                }
+        //            }
+
+        //            attendance.Timestamp = DateTime.Now;
+        //            attendance.EntryType = model.EntryType.ToString();
+
+
+        //            //attendance.EmployeeId = model.EmployeeId;
+        //            //attendance.AttendanceDate = model.AttendanceDate;
+
+        //            TempData["message"] = "Attendance  Updated Successfully";
+        //            DbContext.SaveChanges();
+
+        //            return Json(new { success = true, employeeId = model.EmployeeId });
+
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        ModelState.AddModelError("", "An error occurred while processing your request.");
+        //    }
+
+
+        //    return View(model);
+        //}
         [HttpGet]
-       
+
         [Route("DeleteAttendance/{id}")]
         public ActionResult DeleteAttendance(int id)
         {
@@ -442,9 +726,9 @@ namespace Emp_Demo.Controllers
                 DbContext.Attendances.Remove(attendance);
                 TempData["message"] = "Attendance Deleted Successfully";
                 DbContext.SaveChanges();
-            
-                return Json(new { success = true, employeeId = attendance.EmployeeId },JsonRequestBehavior.AllowGet);
-              
+
+                return Json(new { success = true, employeeId = attendance.EmployeeId }, JsonRequestBehavior.AllowGet);
+
             }
             catch (Exception)
             {
@@ -454,12 +738,15 @@ namespace Emp_Demo.Controllers
             return View();
         }
 
-       
+
+
+        
 
 
     }
-  
 }
+  
+
 
 
 
