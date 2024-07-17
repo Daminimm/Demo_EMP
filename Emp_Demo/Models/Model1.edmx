@@ -27,6 +27,7 @@
           <Property Name="Department" Type="varchar" MaxLength="100" />
           <Property Name="Address" Type="varchar" MaxLength="100" />
           <Property Name="Designation" Type="nvarchar" MaxLength="100" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Userlogin">
           <Key>
@@ -36,6 +37,8 @@
           <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Role" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="PasswordSalt" Type="nvarchar(max)" />
         </EntityType>
         <Association Name="FK_Employeeinfo_Attendance">
           <End Role="Employeeinfo" Type="Self.Employeeinfo" Multiplicity="1" />
@@ -49,7 +52,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Userlogin_Employeeinfo">
+        <Association Name="FK_Employeeinfo_UserId">
           <End Role="Userlogin" Type="Self.Userlogin" Multiplicity="1" />
           <End Role="Employeeinfo" Type="Self.Employeeinfo" Multiplicity="*" />
           <ReferentialConstraint>
@@ -69,7 +72,7 @@
             <End Role="Employeeinfo" EntitySet="Employeeinfo" />
             <End Role="Attendance" EntitySet="Attendance" />
           </AssociationSet>
-          <AssociationSet Name="FK_Userlogin_Employeeinfo" Association="Self.FK_Userlogin_Employeeinfo">
+          <AssociationSet Name="FK_Employeeinfo_UserId" Association="Self.FK_Employeeinfo_UserId">
             <End Role="Userlogin" EntitySet="Userlogin" />
             <End Role="Employeeinfo" EntitySet="Employeeinfo" />
           </AssociationSet>
@@ -103,6 +106,7 @@
           <Property Name="Designation" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Attendances" Relationship="Self.FK_Employeeinfo_Attendance" FromRole="Employeeinfo" ToRole="Attendance" />
           <NavigationProperty Name="Userlogin" Relationship="Self.FK_Userlogin_Employeeinfo" FromRole="Employeeinfo" ToRole="Userlogin" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Userlogin">
           <Key>
@@ -113,6 +117,8 @@
           <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Employeeinfoes" Relationship="Self.FK_Userlogin_Employeeinfo" FromRole="Userlogin" ToRole="Employeeinfo" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordSalt" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Employeeinfo_Attendance">
           <End Role="Employeeinfo" Type="Self.Employeeinfo" Multiplicity="1" />
@@ -171,6 +177,7 @@
           <EntitySetMapping Name="Employeeinfoes">
             <EntityTypeMapping TypeName="Demo_EmployeeManagementModel.Employeeinfo">
               <MappingFragment StoreEntitySet="Employeeinfo">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
@@ -185,6 +192,8 @@
           <EntitySetMapping Name="Userlogins">
             <EntityTypeMapping TypeName="Demo_EmployeeManagementModel.Userlogin">
               <MappingFragment StoreEntitySet="Userlogin">
+                <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="Password" ColumnName="Password" />

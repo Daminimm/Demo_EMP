@@ -77,8 +77,8 @@
                         if (response.success) {
                             window.location.href = '@Url.Action("AttendanceReport", "Admin")' + '?employeeId=' + response.employeeId;
                         } else {
-                            var errorMessages = response.errors.join("\n");
-                            alert(response.message + "\n" + errorMessages);
+                     
+                            alert(response.message );
                         }
                     },
                     error: function(xhr, status, error) {

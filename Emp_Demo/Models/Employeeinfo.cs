@@ -19,7 +19,7 @@ namespace Emp_Demo.Models
         {
             this.Attendances = new HashSet<Attendance>();
         }
-       
+    
         public int EmployeeId { get; set; }
         public int UserId { get; set; }
         public string EmployeeName { get; set; }
@@ -28,6 +28,7 @@ namespace Emp_Demo.Models
         public string Department { get; set; }
         public string Address { get; set; }
         public string Designation { get; set; }
+        public bool IsDeleted { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Attendance> Attendances { get; set; }

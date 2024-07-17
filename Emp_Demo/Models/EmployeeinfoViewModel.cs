@@ -44,8 +44,10 @@ namespace Emp_Demo.Models
         [Required(ErrorMessage = " Username is required")]
         [CustomUsernameValidation]
         public string Username { get; set; }
+        public string PasswordHash { get; set; }
+        public string PasswordSalt { get; set; }
         [Required(ErrorMessage = "Password is required")]
-        [CustomPassword(8, ErrorMessage = "Password must be at least 8 characters long, contain at least one digit, and one special character.")]
+        //[CustomPassword(8, ErrorMessage = "Password must be at least 8 characters long, contain at least one digit, and one special character.")]
         public string Password { get; set; }
         [EmployeeRoleValidation(ErrorMessage = "The Role field can only be filled if the role is specified as 'Employee'.")]
         public string Role { get; set; }

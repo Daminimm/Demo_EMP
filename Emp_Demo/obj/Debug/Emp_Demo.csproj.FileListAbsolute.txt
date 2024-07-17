@@ -57,6 +57,7 @@ C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\Microsoft.CodeDom.Providers.Do
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\Microsoft.Web.Infrastructure.dll
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\Newtonsoft.Json.dll
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\NLog.dll
+C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\System.Security.Cryptography.Cng.dll
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\System.Web.Helpers.dll
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\System.Web.Mvc.dll
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\System.Web.Optimization.dll
@@ -70,6 +71,7 @@ C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\EntityFramework.xml
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\EntityFramework.SqlServer.xml
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\Newtonsoft.Json.xml
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\NLog.xml
+C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\System.Security.Cryptography.Cng.xml
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\System.Web.Optimization.xml
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\System.Web.Razor.xml
 C:\Users\verve\source\repos\Emp_Demo\Emp_Demo\bin\System.Web.Webpages.xml

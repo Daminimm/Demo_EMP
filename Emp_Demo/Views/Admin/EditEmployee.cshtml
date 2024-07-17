@@ -72,7 +72,7 @@
 
         @Html.ValidationMessageFor(Model => Model.Department, "", new { @class = "text-danger" })
     </div>
-    <div class="form-group">
+    @*<div class="form-group">
         @Html.LabelFor(Model => Model.Userlogin.Username, "Username", htmlAttributes: new { @class = "control-label col-md-2 required" })
         @Html.TextBoxFor(model => model.Userlogin.Username, new { @class = "form-control" })
         @Html.ValidationMessageFor(Model => Model.Userlogin.Username, "", new { @class = "text-danger" })
@@ -85,8 +85,8 @@
     <div class="form-group">
         @Html.LabelFor(Model => Model.Userlogin.Role, "Role", htmlAttributes: new { @class = "control-label col-md-2 required" })
         @Html.DropDownListFor(Model => Model.Userlogin.Role, new SelectList(new List<string> { "Admin", "Employee" }), htmlAttributes: new { @class = "form-select" })
-        @Html.ValidationMessageFor(Model => Model.Userlogin.Role, "", new { @class = "text-danger" })
-    </div>
+        @Html.ValidationMessageFor(Model => Model.Userlogin.Role, "", new { @class = "text-danger" })*@
+    @*</div>*@
 
     <button type="submit" class="btn btn-primary">Submit</button>
 

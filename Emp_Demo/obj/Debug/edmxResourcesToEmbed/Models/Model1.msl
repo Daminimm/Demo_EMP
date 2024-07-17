@@ -15,6 +15,7 @@
     <EntitySetMapping Name="Employeeinfoes">
       <EntityTypeMapping TypeName="Demo_EmployeeManagementModel.Employeeinfo">
         <MappingFragment StoreEntitySet="Employeeinfo">
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
           <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
           <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
@@ -29,6 +30,8 @@
     <EntitySetMapping Name="Userlogins">
       <EntityTypeMapping TypeName="Demo_EmployeeManagementModel.Userlogin">
         <MappingFragment StoreEntitySet="Userlogin">
+          <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
+          <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
           <ScalarProperty Name="Username" ColumnName="Username" />
           <ScalarProperty Name="Password" ColumnName="Password" />
