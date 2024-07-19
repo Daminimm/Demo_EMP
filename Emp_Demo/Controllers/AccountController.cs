@@ -16,65 +16,7 @@ namespace Emp_Demo.Controllers
     public class AccountController : Controller
     {
         Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
-        // GET: Account/Register
-        public ActionResult Register()
-        {
-            return View();
-        }
-
-        // POST: Account/Register
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Register(Userlogin model)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    // Generate salt and hash for the password
-                    var salt = GenerateSalt();
-                    var hash = HashPassword(model.Password, salt);
-
-                    // Create new user
-                    var user = new Userlogin
-                    { 
-                     
-                        UserId= model.UserId,
-                        Username = model.Username,
-                        PasswordHash = hash,
-                        PasswordSalt = salt,
-                        Role = model.Role,
-                        Password = model.Password
-
-                        
-                    };
-
-                    // Save to database
-                    DbContext.Userlogins.Add(user);
-                    DbContext.SaveChanges();
-
-                    // Redirect to login page or home page
-                    return RedirectToAction("Login", "Account");
-                }
-                catch (System.Data.Entity.Validation.DbEntityValidationException ex)
-                {
-                    foreach (var validationErrors in ex.EntityValidationErrors)
-                    {
-                        foreach (var validationError in validationErrors.ValidationErrors)
-                        {
-                            ModelState.AddModelError(validationError.PropertyName, validationError.ErrorMessage);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Handle other exceptions
-                    ModelState.AddModelError("", "An error occurred while creating the account. Please try again.");
-                }
-            }
-
-            return View(model);
-        }
+        
         [HttpGet]
         public ActionResult Login()
         {

@@ -29,6 +29,8 @@ namespace Emp_Demo.Models
         public string Address { get; set; }
         public string Designation { get; set; }
         public bool IsDeleted { get; set; }
+        public byte[] Image { get; set; }
+        public string ImagePath { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Attendance> Attendances { get; set; }

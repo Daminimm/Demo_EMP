@@ -26,6 +26,8 @@
     <NavigationProperty Name="Attendances" Relationship="Self.FK_Employeeinfo_Attendance" FromRole="Employeeinfo" ToRole="Attendance" />
     <NavigationProperty Name="Userlogin" Relationship="Self.FK_Userlogin_Employeeinfo" FromRole="Employeeinfo" ToRole="Userlogin" />
     <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+    <Property Name="Image" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="ImagePath" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="Userlogin">
     <Key>

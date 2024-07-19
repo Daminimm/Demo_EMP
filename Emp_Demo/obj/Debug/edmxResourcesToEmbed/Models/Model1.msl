@@ -15,6 +15,8 @@
     <EntitySetMapping Name="Employeeinfoes">
       <EntityTypeMapping TypeName="Demo_EmployeeManagementModel.Employeeinfo">
         <MappingFragment StoreEntitySet="Employeeinfo">
+          <ScalarProperty Name="ImagePath" ColumnName="ImagePath" />
+          <ScalarProperty Name="Image" ColumnName="Image" />
           <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
           <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />

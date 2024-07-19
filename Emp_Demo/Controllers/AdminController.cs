@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using Emp_Demo.Enums;
 using Emp_Demo.Models;
@@ -34,29 +36,29 @@ namespace Emp_Demo.Controllers
 
         [HttpGet]
         [Route("EmployeeList")]
-        public ActionResult EmployeeList()
+        public ActionResult EmployeeList(HttpPostedFileBase user_image_data)
         {
             if (TempData["message"] != null)
             {
                 ViewBag.Message = TempData["message"];
             }
 
-
             Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
+         
             List<Employeeinfo> EmployeeList = DbContext.Employeeinfoes.ToList();
             return View(EmployeeList);
 
 
         }
-        [HttpGet]
+        [HttpGet]  
         [Route("AddEmployee")]
         public ActionResult AddEmployee()
         {
-            var departments = new List<SelectListItem>
-        {
-        new SelectListItem { Value = "Technical", Text = "Technical" },
-        new SelectListItem { Value = "Non-Technical", Text = "Non-Technical" }
-        };
+             var departments = new List<SelectListItem>
+             {
+              new SelectListItem { Value = "Technical", Text = "Technical" },
+              new SelectListItem { Value = "Non-Technical", Text = "Non-Technical" }
+             };
 
             ViewBag.Departments = new SelectList(departments, "Value", "Text");
 
@@ -66,13 +68,13 @@ namespace Emp_Demo.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("AddEmployee")]
-        public ActionResult AddEmployee(EmployeeinfoViewModel model)
+        public ActionResult AddEmployee(EmployeeinfoViewModel model, HttpPostedFileBase user_image_data)
         {
             try
             {
                 using (var DbContext = new Demo_EmployeeManagementEntities())
                 {
-                   
+
                     var departments = new List<SelectListItem>
                     {
                       new SelectListItem { Value = "Technical", Text = "Technical" },
@@ -96,20 +98,24 @@ namespace Emp_Demo.Controllers
                     {
                         var salt = GenerateSalt();
                         var hash = HashPassword(model.Password, salt);
+
                         Userlogin userLogin = new Userlogin
                         {
                             Username = model.Username,
                             PasswordHash = hash,
                             PasswordSalt = salt,
                             Role = model.Role,
-                            Password =model.Password
+                            Password = model.Password,
+                     
+                            
                         };
                         DbContext.Userlogins.Add(userLogin);
                         DbContext.SaveChanges();
 
 
                         model.UserId = userLogin.UserId;
-
+                      
+                 
                         Employeeinfo employee = new Employeeinfo
                         {
                             EmployeeName = model.EmployeeName,
@@ -118,8 +124,39 @@ namespace Emp_Demo.Controllers
                             Department = model.Department,
                             Address = model.Address,
                             Designation = model.Designation,
-                            UserId = model.UserId
+                            UserId = model.UserId,
+                            //Image = imageData,
+                            //ImagePath = fileName != null ? "~/Images/" + fileName : null
+                           
                         };
+                        string fileName = null;
+                        if (user_image_data != null && user_image_data.ContentLength > 0)
+                        {
+                            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                            var ext = Path.GetExtension(user_image_data.FileName).ToLower();
+
+                            if (allowedExtensions.Contains(ext))
+                            {
+                                fileName = Path.GetFileName(user_image_data.FileName);
+                               
+                                var path = Path.Combine(Server.MapPath("~/Images/Img"), fileName);
+                              
+                                user_image_data.SaveAs(path);
+                                employee.ImagePath = path;
+                              
+                                ViewBag.Message = "File uploaded successfully";
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("Image", "Only image files (.jpg, .jpeg, .png) are allowed.");
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.Message = "You have not specified a file.";
+                        }
+
+
 
                         DbContext.Employeeinfoes.Add(employee);
                         DbContext.SaveChanges();
@@ -137,7 +174,8 @@ namespace Emp_Demo.Controllers
             return View(model);
         }
 
-       
+      
+
 
         [HttpGet]
         [Route("EditEmployee/{id}")]
@@ -310,15 +348,16 @@ namespace Emp_Demo.Controllers
                             }
                             else
                             {
-                                //return Json(new { success = false, message = "Timestamp should be less than punch out time." });
-                                ModelState.AddModelError("Timestamp", "Punch in time should be less than punch out time.");
+                                return Json(new { success = false, message = "Punch in in time  should be less than punch out time." });
+                                //ModelState.AddModelError("Timestamp", "Punch in time should be less than punch out time.");
                             //    return View(model);
                             }
                         }
                         else
                         {
-                            ModelState.AddModelError("Timestamp", "No corresponding punch-out record found for this date.");
-                            return View(model);
+                            return Json(new { success = false, message = "No corresponding punch-out record found for this date." });
+                            //ModelState.AddModelError("Timestamp", "No corresponding punch-out record found for this date.");
+                          //    return View(model);
                         }
                     }
                     else if (model.EntryType == "PunchOut")
@@ -346,14 +385,16 @@ namespace Emp_Demo.Controllers
                             }
                             else
                             {
-                                ModelState.AddModelError("Timestamp", "Punch out time should be greater than punch in time.");
-                                return View(model);
+                                return Json(new { success = false, message = "Punch out time should be greater than punch in time." });
+                                //ModelState.AddModelError("Timestamp", "Punch out time should be greater than punch in time.");
+                                //return View(model);
                             }
                         }
                         else
                         {
-                            ModelState.AddModelError("Timestamp", "No corresponding punch-in record found for this date.");
-                            return View(model);
+                            return Json(new { success = false, message = "No corresponding punch-in record found for this date." });
+                            //ModelState.AddModelError("Timestamp", "No corresponding punch-in record found for this date.");
+                            //return View(model);
                         }
                     }
                 }
@@ -393,9 +434,6 @@ namespace Emp_Demo.Controllers
 
             return View();
         }
-
-
-
         private string GenerateSalt()
         {
             byte[] saltBytes = new byte[16];
@@ -415,6 +453,11 @@ namespace Emp_Demo.Controllers
                 return Convert.ToBase64String(hashBytes);
             }
         }
+
+        
+
+
+
 
 
     }

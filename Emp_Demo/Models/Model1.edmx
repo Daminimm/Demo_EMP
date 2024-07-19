@@ -28,6 +28,8 @@
           <Property Name="Address" Type="varchar" MaxLength="100" />
           <Property Name="Designation" Type="nvarchar" MaxLength="100" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="Image" Type="varbinary(max)" />
+          <Property Name="ImagePath" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Userlogin">
           <Key>
@@ -107,6 +109,8 @@
           <NavigationProperty Name="Attendances" Relationship="Self.FK_Employeeinfo_Attendance" FromRole="Employeeinfo" ToRole="Attendance" />
           <NavigationProperty Name="Userlogin" Relationship="Self.FK_Userlogin_Employeeinfo" FromRole="Employeeinfo" ToRole="Userlogin" />
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="Image" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="ImagePath" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Userlogin">
           <Key>
@@ -177,6 +181,8 @@
           <EntitySetMapping Name="Employeeinfoes">
             <EntityTypeMapping TypeName="Demo_EmployeeManagementModel.Employeeinfo">
               <MappingFragment StoreEntitySet="Employeeinfo">
+                <ScalarProperty Name="ImagePath" ColumnName="ImagePath" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />

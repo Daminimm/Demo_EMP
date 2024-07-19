@@ -18,8 +18,8 @@ namespace Emp_Demo.Models
         [StringLength(100, ErrorMessage = "Employee Name cannot be longer than 100 characters")]
         [CustomEmployeeNameFormat(ErrorMessage = "Employee name must start with a capital letter followed by lowercase letters.")]
         public string EmployeeName { get; set; }
-   
-       
+
+
         [MaxLength(50)]
         [Required(ErrorMessage = "Please enter your email address")]
         [CustomEmailFormat(ErrorMessage = "Email must end with '@gmail.com', start with a lowercase letter, and contain at least one digit.")]
@@ -30,7 +30,7 @@ namespace Emp_Demo.Models
         [MaxLength(10)]
         [CustomContactValidation(ErrorMessage = "Contact must be numeric and in valid phone number format (e.g., 123-456-7890).")]
         public string Contact { get; set; }
-    
+
 
         [Required(ErrorMessage = "Department is required")]
         public string Department { get; set; }
@@ -51,5 +51,8 @@ namespace Emp_Demo.Models
         public string Password { get; set; }
         [EmployeeRoleValidation(ErrorMessage = "The Role field can only be filled if the role is specified as 'Employee'.")]
         public string Role { get; set; }
-    }
+        public byte[] Image { get; set; }
+        public HttpPostedFileBase user_image_data { get; set; }
+
+    }   
 }

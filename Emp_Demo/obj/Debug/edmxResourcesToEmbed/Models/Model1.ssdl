@@ -23,6 +23,8 @@
     <Property Name="Address" Type="varchar" MaxLength="100" />
     <Property Name="Designation" Type="nvarchar" MaxLength="100" />
     <Property Name="IsDeleted" Type="bit" Nullable="false" />
+    <Property Name="Image" Type="varbinary(max)" />
+    <Property Name="ImagePath" Type="nvarchar" MaxLength="255" />
   </EntityType>
   <EntityType Name="Userlogin">
     <Key>
