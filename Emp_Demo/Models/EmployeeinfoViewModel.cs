@@ -29,6 +29,7 @@ namespace Emp_Demo.Models
         [Required(ErrorMessage = "Contact is required")]
         [MaxLength(10)]
         [CustomContactValidation(ErrorMessage = "Contact must be numeric and in valid phone number format (e.g., 123-456-7890).")]
+        [RegularExpression(@"^\d+$", ErrorMessage = "Please enter a valid numeric value")]
         public string Contact { get; set; }
 
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -10,8 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using Emp_Demo.Enums;
 using Emp_Demo.Models;
-using Newtonsoft.Json;
-using static Emp_Demo.Controllers.AccountController;
+
 
 namespace Emp_Demo.Controllers
 {
@@ -106,65 +104,69 @@ namespace Emp_Demo.Controllers
                             PasswordSalt = salt,
                             Role = model.Role,
                             Password = model.Password,
-                     
-                            
+
+
                         };
                         DbContext.Userlogins.Add(userLogin);
                         DbContext.SaveChanges();
-
-
                         model.UserId = userLogin.UserId;
-                      
-                 
-                        Employeeinfo employee = new Employeeinfo
-                        {
-                            EmployeeName = model.EmployeeName,
-                            Email = model.Email,
-                            Contact = model.Contact,
-                            Department = model.Department,
-                            Address = model.Address,
-                            Designation = model.Designation,
-                            UserId = model.UserId,
-                            //Image = imageData,
-                            //ImagePath = fileName != null ? "~/Images/" + fileName : null
-                           
-                        };
                         string fileName = null;
+                        byte[] imageData = null;
                         if (user_image_data != null && user_image_data.ContentLength > 0)
                         {
-                            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-                            var ext = Path.GetExtension(user_image_data.FileName).ToLower();
+                            var allowedExtensions = new[] { ".jpg", ".png", ".jpeg" };
+                            string ext = Path.GetExtension(user_image_data.FileName).ToLower();
 
                             if (allowedExtensions.Contains(ext))
                             {
+                              
+                                string folderName = $"{model.UserId}_{model.EmployeeName}";
+                                string path = Server.MapPath($"~/Images/Img/{folderName}");
+
+                          
+                                if (!Directory.Exists(path))
+                                {
+                                    Directory.CreateDirectory(path);
+                                }
+
                                 fileName = Path.GetFileName(user_image_data.FileName);
-                               
-                                var path = Path.Combine(Server.MapPath("~/Images/Img"), fileName);
-                              
-                                user_image_data.SaveAs(path);
-                                employee.ImagePath = path;
-                              
-                                ViewBag.Message = "File uploaded successfully";
+                                string fullPath = Path.Combine(path, fileName);
+
+                                user_image_data.SaveAs(fullPath);
+
+                                using (var binaryReader = new BinaryReader(user_image_data.InputStream))
+                                {
+                                    imageData = binaryReader.ReadBytes(user_image_data.ContentLength);
+                                }
+
+                                Employeeinfo employee = new Employeeinfo
+                                {
+                                    EmployeeName = model.EmployeeName,
+                                    Email = model.Email,
+                                    Contact = model.Contact,
+                                    Department = model.Department,
+                                    Address = model.Address,
+                                    Designation = model.Designation,
+                                    UserId = model.UserId,
+                                    Image = imageData,
+                                    ImagePath = Path.Combine(folderName, fileName) 
+                                };
+
+                                DbContext.Employeeinfoes.Add(employee);
+                                DbContext.SaveChanges();
+                                TempData["message"] = "Employee added successfully.";
+                                return RedirectToAction("EmployeeList");
                             }
                             else
                             {
-                                ModelState.AddModelError("Image", "Only image files (.jpg, .jpeg, .png) are allowed.");
+                                ModelState.AddModelError("user_image_data", "Please choose only image files with extensions .jpg, .png, .jpeg.");
+                                return View(model);
                             }
                         }
-                        else
-                        {
-                            ViewBag.Message = "You have not specified a file.";
-                        }
-
-
-
-                        DbContext.Employeeinfoes.Add(employee);
-                        DbContext.SaveChanges();
-
-                        TempData["message"] = "Employee added successfully.";
-                        return RedirectToAction("EmployeeList");
                     }
                 }
+                    
+                
             }
             catch (Exception)
             {
@@ -211,9 +213,9 @@ namespace Emp_Demo.Controllers
                 employee.Address = model.Address;
                 employee.Department = model.Department;
                 employee.Designation = model.Designation;
-                //employee.Userlogin.Username = model.Userlogin.Username;
-                //employee.Userlogin.Password = model.Userlogin.Password;
-                //employee.Userlogin.Role = model.Userlogin.Role;
+                employee.Userlogin.Username = model.Userlogin.Username;
+                employee.Userlogin.Password = model.Userlogin.Password;
+                employee.Userlogin.Role = model.Userlogin.Role;
             }
             if (ModelState.IsValid)
             {
@@ -349,15 +351,13 @@ namespace Emp_Demo.Controllers
                             else
                             {
                                 return Json(new { success = false, message = "Punch in in time  should be less than punch out time." });
-                                //ModelState.AddModelError("Timestamp", "Punch in time should be less than punch out time.");
-                            //    return View(model);
+                             
                             }
                         }
                         else
                         {
                             return Json(new { success = false, message = "No corresponding punch-out record found for this date." });
-                            //ModelState.AddModelError("Timestamp", "No corresponding punch-out record found for this date.");
-                          //    return View(model);
+                         
                         }
                     }
                     else if (model.EntryType == "PunchOut")
@@ -386,15 +386,13 @@ namespace Emp_Demo.Controllers
                             else
                             {
                                 return Json(new { success = false, message = "Punch out time should be greater than punch in time." });
-                                //ModelState.AddModelError("Timestamp", "Punch out time should be greater than punch in time.");
-                                //return View(model);
+                            
                             }
                         }
                         else
                         {
                             return Json(new { success = false, message = "No corresponding punch-in record found for this date." });
-                            //ModelState.AddModelError("Timestamp", "No corresponding punch-in record found for this date.");
-                            //return View(model);
+                            
                         }
                     }
                 }
@@ -453,11 +451,6 @@ namespace Emp_Demo.Controllers
                 return Convert.ToBase64String(hashBytes);
             }
         }
-
-        
-
-
-
 
 
     }

@@ -29,15 +29,16 @@
 
 <nav class="navbar navbar-dark bg-dark fixed-top">
     <div class="container-fluid">
-  
+
 
         <a class="navbar-brand mr-auto"> Edit Employee Information  </a>
     </div>
 </nav>
 
 @using (Html.BeginForm("EditEmployee", "Admin", FormMethod.Post))
-{
+ {
     @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
     <div class="form-group">
 
@@ -53,7 +54,7 @@
     </div>
     <div class="form-group">
         @Html.LabelFor(Model => Model.Contact, "Contact", htmlAttributes: new { @class = "control-label col-md-2 required" })
-        @Html.TextBoxFor(model => model.Contact, new { @class = "form-control" })
+        @Html.EditorFor(model => model.Contact, new { htmlAttributes = new { @class = "form-control", id = "Contact" } })
         @Html.ValidationMessageFor(Model => Model.Contact, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
@@ -68,24 +69,24 @@
     </div>
     <div class="form-group">
         @Html.LabelFor(Model => Model.Department, "Department", htmlAttributes: new { @class = "control-label col-md-2 required" })
-        @Html.DropDownList("Department", ViewBag.Departments as SelectList, new { @class = "form-control" })
+        @Html.DropDownList("Department", ViewBag.Departments as SelectList, new { @class = "form-control", placeholder = "Select" })
 
         @Html.ValidationMessageFor(Model => Model.Department, "", new { @class = "text-danger" })
     </div>
     @*<div class="form-group">
-        @Html.LabelFor(Model => Model.Userlogin.Username, "Username", htmlAttributes: new { @class = "control-label col-md-2 required" })
-        @Html.TextBoxFor(model => model.Userlogin.Username, new { @class = "form-control" })
-        @Html.ValidationMessageFor(Model => Model.Userlogin.Username, "", new { @class = "text-danger" })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(Model => Model.Userlogin.Password, "Password", htmlAttributes: new { @class = "control-label col-md-2 required" })
-        @Html.TextBoxFor(model => model.Userlogin.Password, new { @class = "form-control" })
-        @Html.ValidationMessageFor(Model => Model.Userlogin.Password, "", new { @class = "text-danger" })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(Model => Model.Userlogin.Role, "Role", htmlAttributes: new { @class = "control-label col-md-2 required" })
-        @Html.DropDownListFor(Model => Model.Userlogin.Role, new SelectList(new List<string> { "Admin", "Employee" }), htmlAttributes: new { @class = "form-select" })
-        @Html.ValidationMessageFor(Model => Model.Userlogin.Role, "", new { @class = "text-danger" })*@
+            @Html.LabelFor(Model => Model.Userlogin.Username, "Username", htmlAttributes: new { @class = "control-label col-md-2 required" })
+            @Html.TextBoxFor(model => model.Userlogin.Username, new { @class = "form-control" })
+            @Html.ValidationMessageFor(Model => Model.Userlogin.Username, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(Model => Model.Userlogin.Password, "Password", htmlAttributes: new { @class = "control-label col-md-2 required" })
+            @Html.TextBoxFor(model => model.Userlogin.Password, new { @class = "form-control" })
+            @Html.ValidationMessageFor(Model => Model.Userlogin.Password, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(Model => Model.Userlogin.Role, "Role", htmlAttributes: new { @class = "control-label col-md-2 required" })
+            @Html.DropDownListFor(Model => Model.Userlogin.Role, new SelectList(new List<string> { "Admin", "Employee" }), htmlAttributes: new { @class = "form-select" })
+            @Html.ValidationMessageFor(Model => Model.Userlogin.Role, "", new { @class = "text-danger" })*@
     @*</div>*@
 
     <button type="submit" class="btn btn-primary">Submit</button>
@@ -95,12 +96,16 @@
     </button>
 
 
+}
+<script>
+    $(document).ready(function () {
+     
+        $("#Contact").on('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    });
+</script>
 
-
-
-
-
- }
 
 
 

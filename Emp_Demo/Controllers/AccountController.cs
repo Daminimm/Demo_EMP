@@ -76,8 +76,50 @@ namespace Emp_Demo.Controllers
 
             return RedirectToAction("Login");
         }
+       
+        [HttpGet]
+        [Route("Register")]
+        public ActionResult Register()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Register")]
+        public ActionResult Register(Userlogin model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var salt = GenerateSalt();
+                    var hash = HashPassword(model.Password, salt);
+                    var user = new Userlogin
+                    {
 
+                        UserId = model.UserId,
+                        Username = model.Username,
+                        PasswordHash = hash,
+                        PasswordSalt = salt,
+                        Role = model.Role,
+                        Password = model.Password,
 
+                    };
+                    DbContext.Userlogins.Add(user);
+                    DbContext.SaveChanges();
+
+              
+                    return RedirectToAction("Login", "Account");
+                }
+                catch (Exception )
+                {
+                   
+                    ModelState.AddModelError("", "An error occurred while creating the account. Please try again.");
+                }
+
+            }
+            return View(model);
+        }
 
         private string GenerateSalt()
         {
@@ -88,7 +130,7 @@ namespace Emp_Demo.Controllers
             }
             return Convert.ToBase64String(saltBytes);
         }
-
+         
         private string HashPassword(string password, string salt)
         {
             using (var sha256 = SHA256.Create())
