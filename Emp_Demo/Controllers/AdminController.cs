@@ -10,10 +10,8 @@ using System.Web.Mvc;
 using Emp_Demo.Enums;
 using Emp_Demo.Models;
 
-
 namespace Emp_Demo.Controllers
 {
-
 
     [RoutePrefix("Admin")]
     public class AdminController : Controller
@@ -29,12 +27,9 @@ namespace Emp_Demo.Controllers
         {
             return View();
         }
-
-
-
         [HttpGet]
         [Route("EmployeeList")]
-        public ActionResult EmployeeList(HttpPostedFileBase user_image_data)
+        public ActionResult EmployeeList()
         {
             if (TempData["message"] != null)
             {
@@ -42,17 +37,17 @@ namespace Emp_Demo.Controllers
             }
 
             Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
-         
+
             List<Employeeinfo> EmployeeList = DbContext.Employeeinfoes.ToList();
             return View(EmployeeList);
 
 
         }
-        [HttpGet]  
+        [HttpGet]
         [Route("AddEmployee")]
         public ActionResult AddEmployee()
         {
-             var departments = new List<SelectListItem>
+            var departments = new List<SelectListItem>
              {
               new SelectListItem { Value = "Technical", Text = "Technical" },
               new SelectListItem { Value = "Non-Technical", Text = "Non-Technical" }
@@ -71,7 +66,7 @@ namespace Emp_Demo.Controllers
             try
             {
                 using (var DbContext = new Demo_EmployeeManagementEntities())
-                {
+                {   
 
                     var departments = new List<SelectListItem>
                     {
@@ -119,11 +114,11 @@ namespace Emp_Demo.Controllers
 
                             if (allowedExtensions.Contains(ext))
                             {
-                              
+
                                 string folderName = $"{model.UserId}_{model.EmployeeName}";
                                 string path = Server.MapPath($"~/Images/Img/{folderName}");
 
-                          
+
                                 if (!Directory.Exists(path))
                                 {
                                     Directory.CreateDirectory(path);
@@ -138,7 +133,6 @@ namespace Emp_Demo.Controllers
                                 {
                                     imageData = binaryReader.ReadBytes(user_image_data.ContentLength);
                                 }
-
                                 Employeeinfo employee = new Employeeinfo
                                 {
                                     EmployeeName = model.EmployeeName,
@@ -149,24 +143,26 @@ namespace Emp_Demo.Controllers
                                     Designation = model.Designation,
                                     UserId = model.UserId,
                                     Image = imageData,
-                                    ImagePath = Path.Combine(folderName, fileName) 
+                                    ImagePath = Path.Combine(folderName, fileName)
                                 };
 
                                 DbContext.Employeeinfoes.Add(employee);
                                 DbContext.SaveChanges();
                                 TempData["message"] = "Employee added successfully.";
                                 return RedirectToAction("EmployeeList");
+
+
                             }
                             else
                             {
                                 ModelState.AddModelError("user_image_data", "Please choose only image files with extensions .jpg, .png, .jpeg.");
                                 return View(model);
                             }
+
+
                         }
-                    }
+                    }  
                 }
-                    
-                
             }
             catch (Exception)
             {
@@ -174,10 +170,8 @@ namespace Emp_Demo.Controllers
             }
 
             return View(model);
+
         }
-
-      
-
 
         [HttpGet]
         [Route("EditEmployee/{id}")]
@@ -213,9 +207,9 @@ namespace Emp_Demo.Controllers
                 employee.Address = model.Address;
                 employee.Department = model.Department;
                 employee.Designation = model.Designation;
-                employee.Userlogin.Username = model.Userlogin.Username;
-                employee.Userlogin.Password = model.Userlogin.Password;
-                employee.Userlogin.Role = model.Userlogin.Role;
+                //employee.Userlogin.Username = model.Userlogin.Username;
+                //employee.Userlogin.Password = model.Userlogin.Password;
+                //employee.Userlogin.Role = model.Userlogin.Role;
             }
             if (ModelState.IsValid)
             {
@@ -337,7 +331,7 @@ namespace Emp_Demo.Controllers
                    
                             TimeSpan punchOutTime = punchOutAttendance.Timestamp.TimeOfDay;
 
-                      
+                         
                             if (currentTime < punchOutTime)
                             {
                                 attendance.Timestamp = model.Timestamp;

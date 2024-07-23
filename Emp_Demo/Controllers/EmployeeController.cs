@@ -16,40 +16,48 @@ namespace Emp_Demo.Controllers
     {
     
         Demo_EmployeeManagementEntities DbContext = new Demo_EmployeeManagementEntities();
-
         [HttpGet]
-        public ActionResult EmployeeDashboard( )
+        [Route("Dashboard")]
+        public ActionResult EmployeeDashboard()
         {
-            int userId = GetLoggedInUserId();
-            var employee = DbContext.Employeeinfoes.FirstOrDefault(e => e.Userlogin.UserId == userId);
-            if (employee != null)
+            try
             {
-                var attendances = DbContext.Attendances.Where(a => a.EmployeeId == employee.EmployeeId).ToList();
-                var lastAttendance = attendances.OrderByDescending(a => a.AttendanceDate).FirstOrDefault();
-                ViewBag.EmployeeName = employee.EmployeeName;
-
-                var model = new AttendanceViewModel
+                int userId = GetLoggedInUserId();
+                var employee = DbContext.Employeeinfoes.FirstOrDefault(e => e.Userlogin.UserId == userId);
+                if (employee != null)
                 {
-                    
+                    var attendances = DbContext.Attendances.Where(a => a.EmployeeId == employee.EmployeeId).ToList();
+                    var lastAttendance = attendances.OrderByDescending(a => a.AttendanceDate).FirstOrDefault();
+                    ViewBag.EmployeeName = employee.EmployeeName;
 
-                    Attendances = attendances
+                    var model = new AttendanceViewModel
+                    {
+                        Attendances = attendances
+                    };
 
-                };
-
-
-                return View(model);
+                    return View(model);
+                }
+                else
+                {
+                    return HttpNotFound();
+                }
             }
-            else
+            catch (Exception )
             {
-                return HttpNotFound();
-            }
+               
+                ViewBag.ErrorMessage = "An error occurred while loading the dashboard. Please try again later.";
 
+                return View("Error");
+            }
         }
+
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("PunchInOut")]
         public ActionResult PunchInOut(AttendanceViewModel model)
         {
-
+              
             if (ModelState.IsValid)
             {
                 try
@@ -137,7 +145,7 @@ namespace Emp_Demo.Controllers
 
 
         [HttpGet]
-
+        [Route("AttendanceReport")]
         public ActionResult AttendanceReport( )
         {
             int userId = GetLoggedInUserId();

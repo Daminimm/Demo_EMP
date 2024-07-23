@@ -25,18 +25,41 @@
     body {
         margin: inherit;
     }
+    .footer {
+        background-color: #f8f9fa;
+        text-align: center;
+        padding: 10px 0;
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 0
+    }
+
+    .footer p {
+            margin-bottom: 0px;
+    }
+
+    hr {
+        margin: 0;
+        border: 0;
+        border-top: 0;
+        opacity: 0;
+    }
 </style>
 
 <nav class="navbar navbar-dark bg-dark fixed-top">
     <div class="container-fluid">
+        <a class="navbar-brand" href="">
 
+            <img src="data:image/jpeg;base64,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" alt="Logo" style="width:40px;" class="rounded-pill">
+            <span class="navbar-brand mb-0 h1">Edit Employee Information </span>
+        </a>
 
-        <a class="navbar-brand mr-auto"> Edit Employee Information  </a>
     </div>
 </nav>
 
-@using (Html.BeginForm("EditEmployee", "Admin", FormMethod.Post))
- {
+ @using (Html.BeginForm("EditEmployee", "Admin", FormMethod.Post))
+  {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -92,11 +115,11 @@
     <button type="submit" class="btn btn-primary">Submit</button>
 
     <button type="button" class="btn btn-dark">
-        @Html.ActionLink("Back to List", "EmployeeList", null, new { @style = "color: white;" })
+        @Html.ActionLink("Back to List", "EmployeeList", null, new { @style = "color: white; text-decoration:none; " })
     </button>
 
 
-}
+  }
 <script>
     $(document).ready(function () {
      

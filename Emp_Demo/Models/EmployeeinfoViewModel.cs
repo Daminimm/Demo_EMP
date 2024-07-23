@@ -14,9 +14,10 @@ namespace Emp_Demo.Models
         public int EmployeeId { get; set; }
         public int UserId { get; set; }
 
-        [Required(ErrorMessage = "Employee Name is required")]
+ 
         [StringLength(100, ErrorMessage = "Employee Name cannot be longer than 100 characters")]
         [CustomEmployeeNameFormat(ErrorMessage = "Employee name must start with a capital letter followed by lowercase letters.")]
+        [Required(ErrorMessage = "Employee Name is required")]
         public string EmployeeName { get; set; }
 
 
